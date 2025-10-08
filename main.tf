@@ -1,10 +1,8 @@
-# ## Module where all variables are defined (to avoid variables code duplication between root and submodules)
-# module "var" {
-#   source = "./modules/var"
 
-#   cluster_name = var.cluster_name
+
+# data "aws_region" "current" {
+
 # }
-
 
 ## Kubernetes cluster
 module "cluster" {
@@ -12,11 +10,15 @@ module "cluster" {
 
   cluster_name = var.cluster_name
   cluster_stage = var.cluster_stage
+  cluster_region = var.cluster_region
 }
 
 
-## Terraform state storage
-# module "storage-state" {
-#   source = "./modules/module-storage-state"
+# Terraform state storage
+module "storage-state" {
+  source = "./modules/module-storage-state"
 
-# }
+  cluster_name = var.cluster_name
+  cluster_stage = var.cluster_stage
+  cluster_region = var.cluster_region
+}

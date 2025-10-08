@@ -13,3 +13,8 @@ variable "cluster_stage" {
 
   }
 }
+
+variable "cluster_region" {
+  description = "Kubernetes cluster region"
+  type        = string
+}

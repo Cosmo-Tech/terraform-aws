@@ -1,6 +1,6 @@
 cluster_name = "devops-test-3"
 cluster_stage = "test"
-# cluster_region = eu-west-1
+cluster_region = "eu-west-1"
 
 
 
