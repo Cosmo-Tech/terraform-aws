@@ -1,5 +1,5 @@
 locals {
-  main_name = "eks-${var.cluster_name}"
+  main_name = "eks-${var.cluster_name}-${var.cluster_stage}"
 }
 
 

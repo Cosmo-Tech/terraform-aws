@@ -1,33 +1,21 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
-}
+# ## Module where all variables are defined (to avoid variables code duplication between root and submodules)
+# module "var" {
+#   source = "./modules/var"
 
-## PROVIDERS
-provider "aws" {
-  region = "eu-west-1"
-}
+#   cluster_name = var.cluster_name
+# }
 
 
-## VARIABLES
-variable "cluster_name" {
-  description = "The name of the Kubernetes cluster"
-  type        = string
-}
-
-
-## MODULES
+## Kubernetes cluster
 module "cluster" {
   source = "./modules/module-cluster"
 
   cluster_name = var.cluster_name
+  cluster_stage = var.cluster_stage
 }
 
 
+## Terraform state storage
 # module "storage-state" {
 #   source = "./modules/module-storage-state"
 

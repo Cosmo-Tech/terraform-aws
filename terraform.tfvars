@@ -1,5 +1,21 @@
-# # Main configuration
 cluster_name = "devops-test-3"
+cluster_stage = "teeeest"
+# cluster_region = eu-west-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # eks_cluster_iam_role = <AWS service to create with terraform>               -> should not be a variable
 
 # eks_configuration_option = custom                   -> should not be a variable

@@ -1,0 +1,15 @@
+variable "cluster_name" {
+  description = "Kubernetes cluster name"
+  type        = string
+}
+
+variable "cluster_stage" {
+  description = "Kubernetes cluster stage"
+  type        = string
+
+  validation {
+    condition = contains(["test", "dev", "dmo", "ppd", "prd"], var.cluster_stage)
+    error_message = "Valid values for 'cluster_stage' are: \n- test\n- dev\n- dmo\n- ppd\n- prd"
+
+  }
+}
