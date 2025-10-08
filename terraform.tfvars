@@ -1,5 +1,5 @@
 cluster_name = "devops-test-3"
-cluster_stage = "teeeest"
+cluster_stage = "test"
 # cluster_region = eu-west-1
 
 
