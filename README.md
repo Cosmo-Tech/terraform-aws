@@ -1,4 +1,4 @@
-# Kubernetes cluster
+## Kubernetes cluster
 **AWS - EKS**
 
 ### How to 
@@ -8,7 +8,7 @@
 * to fill
 
 
-## Good to know
+### Good to know
 Modules variables.tf files are symbolics links to main variables.tf to avoid code duplication.
 ```
 cd modules/module-<name>
