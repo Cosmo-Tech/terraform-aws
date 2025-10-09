@@ -1,6 +1,6 @@
 ## Kubernetes cluster
 module "cluster" {
-  source = "./modules/module-cluster"
+  source = "./modules/cluster"
 
   cluster_name = var.cluster_name
   cluster_stage = var.cluster_stage
@@ -10,7 +10,7 @@ module "cluster" {
 
 ## Kubernetes cluster nodes
 module "cluster-nodes" {
-  source = "./modules/module-cluster-nodes"
+  source = "./modules/cluster-nodes"
 
   cluster_name = var.cluster_name
   cluster_stage = var.cluster_stage

@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-west-1"
+  # region = "eu-west-1"
   # region = var.cluster_region
   # shared_credentials_file = "~/.aws/credentials"
 }
