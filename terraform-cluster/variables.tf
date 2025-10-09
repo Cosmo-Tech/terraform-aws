@@ -1,3 +1,7 @@
+locals {
+  main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
+}
+
 variable "cluster_name" {
   description = "Kubernetes cluster name"
   type        = string

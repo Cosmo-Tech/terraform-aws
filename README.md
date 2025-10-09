@@ -9,20 +9,28 @@
 
 ### How to
 * configure aws cli
-* clone current repo ```git clone https://github.com/Cosmo-Tech/terraform-eks.git```
-* open cloned repository ```cd terraform-eks```
+* clone current repo
+```git clone https://github.com/Cosmo-Tech/terraform-eks.git```
+* open cloned repository
+```cd terraform-eks```
 * deploy
     * set default AWS region in providers.tf
-    * if first cluster: ```./_create_state_storage-terraform.sh```
-    * fill terraform.tfvars variables
-    * run pre-configured script ```_run-terraform.sh```
+    * if first cluster:
+    ```./_create_state_storage-terraform.sh```
+    * fill `terraform.tfvars` variables
+    * run pre-configured script
+    ```_run-terraform.sh```
 
 
 ### Good to know
 #### Modules variables.tf files are symbolics links to main variables.tf to avoid code duplication.
+*copy/paste following block to ensure having global_variables.tf files in all child modules*
 ```
-cd modules/module-<name>
-ln -sf ../../variables.tf variables.tf
+for module in $(ls terraform-cluster/modules/); do
+    cd terraform-cluster/modules/$module
+    ln -sf ../../variables.tf global_variables.tf
+    cd ../../../
+done
 ```
 
 #### Deployments items & wokflow
