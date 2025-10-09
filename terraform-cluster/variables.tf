@@ -14,7 +14,6 @@ variable "cluster_stage" {
   validation {
     condition     = contains(["test", "dev", "dmo", "ppd", "prd"], var.cluster_stage)
     error_message = "Valid values for 'cluster_stage' are: \n- test\n- dev\n- dmo\n- ppd\n- prd"
-
   }
 }
 

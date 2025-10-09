@@ -1,5 +1,5 @@
 resource "aws_eks_cluster" "cluster" {
-  name = local.main_name
+  name     = local.main_name
   role_arn = var.iam_role
 
   access_config {

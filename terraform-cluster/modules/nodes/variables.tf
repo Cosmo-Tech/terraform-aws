@@ -1,5 +1,5 @@
 variable "subnet_ids" {
-  type = list
+  type = list(any)
 }
 
 variable "iam_role" {

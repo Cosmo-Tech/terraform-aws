@@ -1,20 +1,3 @@
-# locals {
-#   main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
-# }
-
-
-## DNS
-module "dns" {
-  source = "./modules/dns"
-
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
-  # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
-  # main_name = var.main_name
-}
-
-
 ## IAM
 module "iam" {
   source = "./modules/iam"
