@@ -7,8 +7,8 @@
 module "dns" {
   source = "./modules/dns"
 
-  cluster_name = var.cluster_name
-  cluster_stage = var.cluster_stage
+  cluster_name   = var.cluster_name
+  cluster_stage  = var.cluster_stage
   cluster_region = var.cluster_region
   # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
   # main_name = var.main_name
@@ -19,10 +19,9 @@ module "dns" {
 module "iam" {
   source = "./modules/iam"
 
-  cluster_name = var.cluster_name
-  cluster_stage = var.cluster_stage
+  cluster_name   = var.cluster_name
+  cluster_stage  = var.cluster_stage
   cluster_region = var.cluster_region
-  # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
 }
 
 
@@ -30,10 +29,9 @@ module "iam" {
 module "network" {
   source = "./modules/network"
 
-  cluster_name = var.cluster_name
-  cluster_stage = var.cluster_stage
+  cluster_name   = var.cluster_name
+  cluster_stage  = var.cluster_stage
   cluster_region = var.cluster_region
-  # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
 }
 
 
@@ -41,13 +39,13 @@ module "network" {
 module "cluster" {
   source = "./modules/cluster"
 
-  cluster_name = var.cluster_name
-  cluster_stage = var.cluster_stage
+  cluster_name   = var.cluster_name
+  cluster_stage  = var.cluster_stage
   cluster_region = var.cluster_region
-  # iam_role = module.iam.role
-  # subnet1_id = module.network.subnet1_id
-  # subnet2_id = module.network.subnet2_id
-  # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
+
+  iam_role   = module.iam.role_arn
+  subnet1_id = module.network.subnet1_id
+  subnet2_id = module.network.subnet2_id
 }
 
 
@@ -55,9 +53,13 @@ module "cluster" {
 module "nodes" {
   source = "./modules/nodes"
 
-  cluster_name = var.cluster_name
-  cluster_stage = var.cluster_stage
+  cluster_name   = var.cluster_name
+  cluster_stage  = var.cluster_stage
   cluster_region = var.cluster_region
-  # main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
+
+  iam_role   = module.iam.role_arn
+  subnet_ids = module.network.subnet_ids
+  # subnet1_id = module.network.subnet1_id
+  # subnet2_id = module.network.subnet2_id
 }
 

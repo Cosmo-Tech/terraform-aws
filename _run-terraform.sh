@@ -38,7 +38,7 @@ if [ -z "$(aws s3 ls --bucket-name-prefix $state_storage_name)" ]; then
 fi
 
 
-terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="key=tfstate-$cluster_stage-$cluster_name" -backend-config="region=$cluster_region"
+terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="key=tfstate-eks-$cluster_stage-$cluster_name" -backend-config="region=$cluster_region"
 terraform -chdir=terraform-cluster plan -out .terraform.plan
 # terraform -chdir=terraform-cluster apply .terraform.plan
 

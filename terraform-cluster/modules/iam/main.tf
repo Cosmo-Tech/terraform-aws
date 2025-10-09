@@ -1,7 +1,3 @@
-# locals {
-#   main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
-# }
-
 resource "aws_iam_role" "role" {
   name = "cosmotech-${local.main_name}"
   assume_role_policy = jsonencode({
