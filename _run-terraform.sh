@@ -29,7 +29,7 @@ cluster_region="$(get_var_value terraform-cluster/terraform.tfvars cluster_regio
 state_storage_name="$(get_var_value terraform-state-storage/main.tf bucket)"
 
 
-if [ -z "$(aws s3 ls)" ]; then
+if [ -z "$(aws s3 ls --bucket-name-prefix $state_storage_name)" ]; then
     echo "error: storage to host states not found: \e[91m$state_storage_name\e[0m"
     echo "you can either:"
     echo "  - manually create a S3 storage with this name: $state_storage_name"
