@@ -8,14 +8,25 @@ module "cluster" {
 }
 
 
-# Terraform state storage of Kubernetes cluster
-module "cluster-storage-state" {
-  source = "./modules/module-cluster-storage-state"
+## Kubernetes cluster nodes
+module "cluster-nodes" {
+  source = "./modules/module-cluster-nodes"
 
   cluster_name = var.cluster_name
   cluster_stage = var.cluster_stage
   cluster_region = var.cluster_region
 }
+
+
+
+# # Terraform state storage of Kubernetes cluster
+# module "cluster-storage-state" {
+#   source = "./modules/module-cluster-storage-state"
+
+#   cluster_name = var.cluster_name
+#   cluster_stage = var.cluster_stage
+#   cluster_region = var.cluster_region
+# }
 
 
 # # Terraform state storage of Cosmo Tech Tenant
