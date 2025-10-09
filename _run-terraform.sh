@@ -20,12 +20,9 @@ get_var_value() {
 
     cat $file | grep -w $variable | sed 's|.*"\(.*\)".*|\1|' | head -n 1
 }
-
-
 cluster_name="$(get_var_value terraform-cluster/terraform.tfvars cluster_name)"
 cluster_stage="$(get_var_value terraform-cluster/terraform.tfvars cluster_stage)"
 cluster_region="$(get_var_value terraform-cluster/terraform.tfvars cluster_region)"
-
 state_storage_name="$(get_var_value terraform-state-storage/main.tf bucket)"
 
 
@@ -40,15 +37,10 @@ if [ -z "$(aws s3 ls --bucket-name-prefix $state_storage_name)" ]; then
     exit
 fi
 
-terraform -chdir=terraform-cluster init \
-    -backend-config="bucket=$state_storage_name" \
-    -backend-config="key=tfstate-$cluster_stage-$cluster_name" \
-    -backend-config="region=${cluster_region}" \
-    -upgrade
+
+terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="key=tfstate-$cluster_stage-$cluster_name" -backend-config="region=$cluster_region"
 terraform -chdir=terraform-cluster plan -out .terraform.plan
-# terraform -chdir=terraform-cluster apply .terraform.plan
-
-
+terraform -chdir=terraform-cluster apply .terraform.plan
 
 
 exit

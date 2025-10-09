@@ -6,17 +6,9 @@ terraform {
     }
   }
 
-  backend "s3" {
-    # bucket = "cosmotech-states"
-    # bucket = "tfstates-${var.cluster_stage}-${var.cluster_name}"
-    # key    = "path/to/my/key"
-    # region = var.cluster_region
-    # shared_credentials_file = "~/.aws/credentials"
-  }
+  backend "s3" {}
 }
 
 provider "aws" {
-  # region = "eu-west-1"
-  # region = var.cluster_region
-  # shared_credentials_file = "~/.aws/credentials"
+  region = "eu-west-3"
 }

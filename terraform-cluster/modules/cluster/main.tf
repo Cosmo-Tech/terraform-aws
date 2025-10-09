@@ -51,7 +51,7 @@ resource "aws_eks_cluster" "cluster" {
 }
 
 resource "aws_iam_role" "cluster" {
-  name = local.main_name
+  name = "cosmotech-${local.main_name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

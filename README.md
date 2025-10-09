@@ -12,6 +12,7 @@
 * clone current repo ```git clone https://github.com/Cosmo-Tech/terraform-eks.git```
 * open cloned repository ```cd terraform-eks```
 * deploy
+    * set default AWS region in providers.tf
     * if first cluster: ```./_create_state_storage-terraform.sh```
     * fill terraform.tfvars variables
     * run pre-configured script ```_run-terraform.sh```
