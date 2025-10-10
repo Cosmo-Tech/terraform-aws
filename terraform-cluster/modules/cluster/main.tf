@@ -1,6 +1,11 @@
 resource "aws_eks_cluster" "cluster" {
   name     = local.main_name
   role_arn = var.iam_role
+  deletion_protection = true
+
+  compute_config {
+    enabled = true
+  }
 
   access_config {
     authentication_mode = "API"

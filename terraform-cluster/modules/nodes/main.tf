@@ -50,14 +50,16 @@
 
 
 locals {
-  node_name_prefix = "cosmotech-platform-node"
+  node_name_prefix = "cosmotech-node-${local.main_name}"
   # image_id  = "ami-0bc691261a82b32bc" # Ubuntu 24 (64-bit (x86))
-  image_id  = data.aws_ami.image.image_id # Ubuntu 24 (64-bit (x86))
+  image_id  = data.aws_ami.image.image_id
 
 }
 
 
 data "aws_ami" "image" {
+  # Ubuntu 24 (64-bit (x86))
+
   owners      = ["amazon"]
   most_recent = true
   region = var.cluster_region
