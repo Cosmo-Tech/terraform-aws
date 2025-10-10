@@ -1,4 +1,4 @@
-`#ffb039` **AWS**
+<span style="color:#ffb039">**AWS**</span> 
 # Kubernetes cluster
 
 ### Requirements
