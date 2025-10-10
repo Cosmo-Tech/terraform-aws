@@ -1,4 +1,4 @@
-<span style="color: #FFB039; font-weight: bold;">AWS</span>
+**$${\color{#FFB039}AWS}$$**
 
 # Kubernetes cluster
 
