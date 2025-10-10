@@ -1,4 +1,4 @@
-**AWS - EKS**
+`#ffb039` **AWS**
 # Kubernetes cluster
 
 ### Requirements
