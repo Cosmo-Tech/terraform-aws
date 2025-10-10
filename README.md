@@ -4,8 +4,9 @@
 ### Requirements
 * working AWS account
 * Linux (Debian/Ubuntu) workstation with:
-    * [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) ready to use (with AWS account credentials configured)
-    * [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) ready to use
+    * [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) (ready to use: with AWS account credentials configured)
+    * [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+    * [jq](https://jqlang.org/)
 
 ### How to
 * configure aws cli
