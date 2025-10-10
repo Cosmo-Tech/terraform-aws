@@ -1,4 +1,4 @@
-**#FFB039[AWS]**
+#FFB039[**AWS**]
 
 # Kubernetes cluster
 
