@@ -52,7 +52,7 @@
 locals {
   node_name_prefix = "cosmotech-node-${local.main_name}"
   # image_id  = "ami-0bc691261a82b32bc" # Ubuntu 24 (64-bit (x86))
-  image_id  = data.aws_ami.image.image_id
+  image_id = data.aws_ami.image.image_id
 
 }
 
@@ -62,7 +62,7 @@ data "aws_ami" "image" {
 
   owners      = ["amazon"]
   most_recent = true
-  region = var.cluster_region
+  region      = var.cluster_region
 
   filter {
     name   = "architecture"
@@ -111,6 +111,15 @@ resource "aws_eks_node_group" "node_group-db" {
   node_role_arn   = var.iam_role
   subnet_ids      = var.subnet_ids
 
+  labels {
+    "cosmotech.com/tier" = "db"
+  }
+
+  taint {
+    key = "vendor"
+    value = "cosmotech"
+    effect = "NoSchedule"
+  }
 
   launch_template {
     id      = aws_launch_template.template_node-db.id

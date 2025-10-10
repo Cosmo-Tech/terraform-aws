@@ -28,7 +28,7 @@ state_storage_name="$(get_var_value terraform-state-storage/main.tf bucket)"
 
 # Ensure a storage service exist to store the states and ask to create it if doesn't exist
 # Trick is to create the storage service with the var cluster_region if it doesn't exist yet
-if [ -z "$(aws s3 ls --bucket-name-prefix $state_storage_name)" ]; then
+if [ -z "$(aws s3 ls --bucket-name $state_storage_name)" ]; then
     echo "error: storage to host states not found: \e[91m$state_storage_name\e[0m"
     echo "you can either:"
     echo "  - manually create a S3 storage with this name: $state_storage_name"
@@ -38,7 +38,8 @@ if [ -z "$(aws s3 ls --bucket-name-prefix $state_storage_name)" ]; then
     echo "      terraform -chdir=terraform-state-storage apply .terraform.plan"
     exit
 else
-    state_storage_region="$(aws s3api head-bucket --bucket $state_storage_name | jq -r '.BucketRegion')"
+    echo "getting state storage region..."
+    state_storage_region="$(aws --output json s3api head-bucket --bucket $state_storage_name | jq -r '.BucketRegion')"
 fi
 
 # Clear old data

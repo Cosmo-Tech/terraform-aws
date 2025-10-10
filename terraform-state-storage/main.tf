@@ -9,5 +9,5 @@ resource "aws_s3_bucket" "cosmotech_states" {
 
 variable "region" {
   description = "Storage region"
-  type = string
+  type        = string
 }

@@ -1,5 +1,14 @@
 locals {
   main_name = "eks-${var.cluster_stage}-${var.cluster_name}"
+
+  tags = merge(
+    var.additional_tags,
+    {
+      rg = local.main_name
+      stage = var.cluster_stage
+    },
+  )
+
 }
 
 variable "cluster_name" {
@@ -20,4 +29,9 @@ variable "cluster_stage" {
 variable "cluster_region" {
   description = "Kubernetes cluster region"
   type        = string
+}
+
+variable "additional_tags" {
+  description = "List of tags"
+  type        = map(string)
 }

@@ -1,11 +1,26 @@
 resource "aws_eks_cluster" "cluster" {
-  name     = local.main_name
-  role_arn = var.iam_role
+  name                = local.main_name
+  role_arn            = var.iam_role
   deletion_protection = true
 
   compute_config {
     enabled = true
   }
+
+  kubernetes_network_config {
+    elastic_load_balancing {
+      enabled = true
+    }
+  }
+
+  storage_config {
+    block_storage {
+      enabled = true
+    }
+  }
+
+
+  bootstrap_self_managed_addons = false
 
   access_config {
     authentication_mode = "API"
@@ -18,12 +33,14 @@ resource "aws_eks_cluster" "cluster" {
     ]
   }
 
-  # Ensure that IAM Role permissions are created before and deleted
-  # after EKS Cluster handling. Otherwise, EKS will not be able to
-  # properly delete EKS managed EC2 infrastructure such as Security Groups.
-  # depends_on = [
-  #   aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-  # ]
+  tags = local.tags
+
+
+
+  depends_on = [
+    var.iam_role,
+  ]
 }
 
 
+ 
