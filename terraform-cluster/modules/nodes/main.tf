@@ -60,6 +60,7 @@ locals {
 data "aws_ami" "image" {
   owners      = ["amazon"]
   most_recent = true
+  region = var.cluster_region
 
   filter {
     name   = "architecture"

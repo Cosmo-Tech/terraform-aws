@@ -16,10 +16,10 @@
 * deploy
     * set default AWS region in providers.tf
     * if first cluster:
-    ```./_create_state_storage-terraform.sh```
-    * fill `terraform.tfvars` variables
+```./_create_state_storage-terraform.sh```
+    * fill `terraform-cluster/terraform.tfvars` variables according to your needs
     * run pre-configured script
-    ```_run-terraform.sh```
+```_run-terraform.sh```
 
 
 ### Good to know

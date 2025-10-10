@@ -1,6 +1,6 @@
 cluster_name   = "devops4"
 cluster_stage  = "dev"
-cluster_region = "eu-west-3"
+cluster_region = "eu-west-1"
 
 
 
