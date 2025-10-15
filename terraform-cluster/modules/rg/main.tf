@@ -1,6 +1,7 @@
 
 resource "aws_resourcegroups_group" "rg" {
   name = local.main_name
+  tags = local.tags
 
   resource_query {
     query = <<JSON

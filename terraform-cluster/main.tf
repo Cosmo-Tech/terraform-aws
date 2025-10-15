@@ -2,10 +2,10 @@
 module "rg" {
   source = "./modules/rg"
 
-  additional_tags           = var.additional_tags
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
 }
 
 
@@ -13,10 +13,10 @@ module "rg" {
 module "iam" {
   source = "./modules/iam"
 
-  additional_tags           = var.additional_tags
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
 }
 
 
@@ -24,10 +24,10 @@ module "iam" {
 module "network" {
   source = "./modules/network"
 
-  additional_tags           = var.additional_tags
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
 }
 
 
@@ -35,14 +35,18 @@ module "network" {
 module "cluster" {
   source = "./modules/cluster"
 
-  additional_tags           = var.additional_tags
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
 
   iam_role   = module.iam.role_arn
-  subnet1_id = module.network.subnet1_id
-  subnet2_id = module.network.subnet2_id
+  subnet_ids = module.network.subnet_ids
+  # route_id = module.network.route_id
+  # nat_gateway_id1 = module.network.nat_gateway_id1
+  # nat_gateway_id2 = module.network.nat_gateway_id2
+  # subnet1_id = module.network.subnet1_id
+  # subnet2_id = module.network.subnet2_id
 }
 
 
@@ -50,13 +54,19 @@ module "cluster" {
 module "nodes" {
   source = "./modules/nodes"
 
-  additional_tags           = var.additional_tags
-  cluster_name   = var.cluster_name
-  cluster_stage  = var.cluster_stage
-  cluster_region = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
+
+  cluster_id = module.cluster.cluster_id
 
   iam_role   = module.iam.role_arn
   subnet_ids = module.network.subnet_ids
+  # route_id = module.network.route_id
+
+  # nat_gateway_id1 = module.network.nat_gateway_id1
+  # nat_gateway_id2 = module.network.nat_gateway_id2
   # subnet1_id = module.network.subnet1_id
   # subnet2_id = module.network.subnet2_id
 }

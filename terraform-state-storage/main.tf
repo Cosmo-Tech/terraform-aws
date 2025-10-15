@@ -6,8 +6,3 @@ resource "aws_s3_bucket" "cosmotech_states" {
     prevent_destroy = true
   }
 }
-
-variable "region" {
-  description = "Storage region"
-  type        = string
-}

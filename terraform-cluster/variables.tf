@@ -4,8 +4,9 @@ locals {
   tags = merge(
     var.additional_tags,
     {
-      rg = local.main_name
-      stage = var.cluster_stage
+      rg     = local.main_name
+      stage  = var.cluster_stage
+      vendor = "cosmotech"
     },
   )
 
