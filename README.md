@@ -17,28 +17,28 @@
         * open "Access keys"
         * copy/paste *aws_access_key_id*, *aws_secret_access_key* and *aws_session_token*
     * ensure the connection is working
-        `
+        ```
         aws sts get-caller-identity
-        `
+        ```
 * clone current repo
-```
-git clone https://github.com/Cosmo-Tech/terraform-eks.git
-```
+    ```
+    git clone https://github.com/Cosmo-Tech/terraform-eks.git
+    ```
 * open cloned repository
-```
-cd terraform-eks
-```
+    ```
+    cd terraform-eks
+    ```
 * deploy
     * fill `terraform-cluster/terraform.tfvars` variables according to your needs
     * run pre-configured script
         * :information_source: comment/uncomment the *terraform apply* line at the end to get a plan without deploy anything
-```
-_run-terraform.sh
-```
+            ```
+            _run-terraform.sh
+            ```
     * add kubectl context
-```
-aws eks update-kubeconfig --region cluster_region --name cluster_name --alias cluster_name
-```
+        ```
+        aws eks update-kubeconfig --region cluster_region --name cluster_name --alias cluster_name
+        ```
 
 ## Developpers
 * modules
