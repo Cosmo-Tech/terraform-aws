@@ -33,8 +33,7 @@
 * deploy
     * fill `terraform-cluster/terraform.tfvars` variables according to your needs
     * run pre-configured script
-        > [!NOTE]
-        > Comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
+        > :information_source: Comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
         ```
         ./_run-terraform.sh
         ```
