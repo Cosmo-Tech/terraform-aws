@@ -40,14 +40,9 @@ module "cluster" {
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
 
-  iam_role_main   = module.iam.role_main.arn
-  iam_role_eks_auto_mode   = module.iam.role_eks_auto_mode.arn
-  subnet_ids = module.network.subnet_ids
-  # route_id = module.network.route_id
-  # nat_gateway_id1 = module.network.nat_gateway_id1
-  # nat_gateway_id2 = module.network.nat_gateway_id2
-  # subnet1_id = module.network.subnet1_id
-  # subnet2_id = module.network.subnet2_id
+  iam_role_main          = module.iam.role_main.arn
+  iam_role_eks_auto_mode = module.iam.role_eks_auto_mode.arn
+  subnet_ids             = module.network.subnet_ids
 }
 
 
@@ -62,13 +57,51 @@ module "nodes" {
 
   cluster_id = module.cluster.cluster_id
 
-  iam_role_main   = module.iam.role_main.arn
-  subnet_ids = module.network.subnet_ids
-  # route_id = module.network.route_id
+  iam_role_main = module.iam.role_main.arn
+  subnet_ids    = module.network.subnet_ids
 
-  # nat_gateway_id1 = module.network.nat_gateway_id1
-  # nat_gateway_id2 = module.network.nat_gateway_id2
-  # subnet1_id = module.network.subnet1_id
-  # subnet2_id = module.network.subnet2_id
+  node_groups = {
+    monitoring = {
+      machine_type = "t3.small"
+      min          = 1
+      max          = 2
+      tier         = "monitoring"
+    }
+
+    services = {
+      machine_type = "t3a.xlarge"
+      min          = 0
+      max          = 3
+      tier         = "services"
+    }
+
+    db = {
+      machine_type = "t3a.large"
+      min          = 1
+      max          = 4
+      tier         = "db"
+    }
+
+    basic = {
+      machine_type = "c5d.xlarge"
+      min          = 1
+      max          = 4
+      tier         = "basic"
+    }
+
+    highcpu = {
+      machine_type = "c5d.18xlarge"
+      min          = 0
+      max          = 3
+      tier         = "highcpu"
+    }
+
+    highmemory = {
+      machine_type = "r5ad.4xlarge"
+      min          = 0
+      max          = 3
+      tier         = "highmemory"
+    }
+  }
 }
 

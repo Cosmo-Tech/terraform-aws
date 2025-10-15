@@ -156,20 +156,74 @@ locals {
 #   }
 # }
 
-resource "aws_eks_node_group" "node_group-db" {
+# resource "aws_eks_node_group" "node_group-db" {
+#   tags = local.tags
+
+#   cluster_name = local.main_name
+
+#   node_group_name = "${local.main_name}-db"
+#   node_role_arn   = var.iam_role_main
+#   subnet_ids      = var.subnet_ids
+
+#   instance_types = ["t3a.large"]
+#   ami_type       = "AL2023_x86_64_STANDARD"
+
+#   labels = {
+#     "cosmotech.com/tier" = "db"
+#   }
+
+#   taint {
+#     key    = "vendor"
+#     value  = "cosmotech"
+#     effect = "NO_SCHEDULE"
+#   }
+
+#   # launch_template {
+#   #   id      = aws_launch_template.template_node-db.id
+#   #   version = aws_launch_template.template_node-db.default_version
+#   # }
+
+#   scaling_config {
+#     desired_size = 1
+#     min_size     = 1
+#     max_size     = 6
+#   }
+
+#   lifecycle {
+#     ignore_changes = [launch_template]
+#   }
+
+#   update_config {
+#     max_unavailable = 1
+#   }
+
+#   depends_on = [
+#     var.iam_role_main,
+#     var.cluster_id,
+#     var.subnet_ids,
+#   ]
+# }
+
+
+
+
+
+resource "aws_eks_node_group" "node_groups" {
+  for_each = var.node_groups
+
   tags = local.tags
 
   cluster_name = local.main_name
 
-  node_group_name = "${local.main_name}-db"
+  node_group_name = "${local.main_name}-${each.value.tier}"
   node_role_arn   = var.iam_role_main
   subnet_ids      = var.subnet_ids
 
-  instance_types = ["t3a.large"]
+  instance_types = ["${each.value.machine_type}"]
   ami_type       = "AL2023_x86_64_STANDARD"
 
   labels = {
-    "cosmotech.com/tier" = "db"
+    "cosmotech.com/tier" = "${each.value.tier}"
   }
 
   taint {
@@ -178,20 +232,15 @@ resource "aws_eks_node_group" "node_group-db" {
     effect = "NO_SCHEDULE"
   }
 
-  # launch_template {
-  #   id      = aws_launch_template.template_node-db.id
-  #   version = aws_launch_template.template_node-db.default_version
-  # }
-
   scaling_config {
-    desired_size = 1
-    min_size     = 1
-    max_size     = 6
+    desired_size = each.value.min
+    min_size     = each.value.min
+    max_size     = each.value.max
   }
 
-  lifecycle {
-    ignore_changes = [launch_template]
-  }
+  # lifecycle {
+  #   ignore_changes = [launch_template]
+  # }
 
   update_config {
     max_unavailable = 1
@@ -200,9 +249,6 @@ resource "aws_eks_node_group" "node_group-db" {
   depends_on = [
     var.iam_role_main,
     var.cluster_id,
-    # aws_launch_template.template_node-db,
-    # var.nat_gateway_id1,
-    # var.nat_gateway_id2,
     var.subnet_ids,
   ]
 }

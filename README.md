@@ -41,6 +41,21 @@
         ```
         aws eks update-kubeconfig --region cluster_region --name cluster_name --alias cluster_name
         ```
+    * to be able to connect to cluster with kubectl, your current AWS user must have the right. 
+        > Without good permissions, "system" node pool will also appear as "Unknown"
+        * go to AWS > EKS > deployed cluster > Access
+        * create an assignment
+            * IAM principal ARN = *your current user*
+            * Type = Standard
+            * click on "Next"
+            * Policy name = `AmazonEKSClusterAdminPolicy`
+            * Access scope = Cluster
+            * click on "Add policy"
+            * click on "Create"
+    * try a kubectl command to ensure the access is working
+        ```
+        kubectl get nodes
+        ```
 
 ## Developpers
 * modules

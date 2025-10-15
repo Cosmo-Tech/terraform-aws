@@ -87,7 +87,7 @@ resource "aws_route_table" "wan_rt" {
 resource "aws_route_table_association" "wan_rt" {
   subnet_id      = aws_subnet.wan_subnet.id
   route_table_id = aws_route_table.wan_rt.id
-  region = var.cluster_region
+  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.wan_subnet,
@@ -99,7 +99,7 @@ resource "aws_route_table_association" "wan_rt" {
 
 # -- NAT --
 resource "aws_eip" "nat_ip" {
-  domain   = "vpc"
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "nat" {
@@ -110,10 +110,10 @@ resource "aws_nat_gateway" "nat" {
     },
   )
 
-  subnet_id         = aws_subnet.wan_subnet.id
+  subnet_id = aws_subnet.wan_subnet.id
   # connectivity_type = "private"
   connectivity_type = "public"
-  allocation_id = aws_eip.nat_ip.id
+  allocation_id     = aws_eip.nat_ip.id
 
 }
 # -- NAT --
@@ -147,7 +147,7 @@ resource "aws_route_table" "lan_rt" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat.id
   }
 
@@ -164,7 +164,7 @@ resource "aws_route_table_association" "lan_rt" {
 
   subnet_id      = aws_subnet.lan_subnets[count.index].id
   route_table_id = aws_route_table.lan_rt.id
-  region = var.cluster_region
+  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.lan_subnets,
