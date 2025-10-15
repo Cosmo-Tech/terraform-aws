@@ -141,7 +141,7 @@ else
                     echo "deleting subnet           $resource_id"
                     aws ec2 delete-subnet --subnet-id $resource_id > /dev/null
 
-                    # wait_resource_destruction $resource
+                    wait_resource_destruction $resource
                 fi
 
                 if [ "$(echo $resource_type)" = "internet-gateway" ]; then
@@ -151,7 +151,7 @@ else
                     aws ec2 detach-internet-gateway --internet-gateway-id $resource_id --vpc-id $vpc_id > /dev/null
                     aws ec2 delete-internet-gateway --internet-gateway-id $resource_id > /dev/null
 
-                    # wait_resource_destruction $resource
+                    wait_resource_destruction $resource
                 fi
 
                 if [ "$(echo $resource_type)" = "vpc" ]; then

@@ -93,36 +93,5 @@ resource "aws_eks_addon" "addon-coredns" {
 
   depends_on = [
     aws_eks_cluster.cluster,
-    # aws_eks_addon.addon-kube_proxy,
-    # aws_eks_addon.addon-vpc_cni,
   ]
 }
-
-
-
-
-# # Admin users
-# resource "aws_iam_role_main_policy_attachment" "cluster_AmazonEKSClusterAdminPolicy" {
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-#   role       = var.iam_role_main
-
-#   depends_on = [
-#     var.iam_role_main,
-#     aws_eks_cluster.cluster,
-#   ]
-# }
-
-# resource "aws_eks_access_policy_association" "cluster_admin" {
-#   cluster_name  = local.main_name
-#   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-#   # principal_arn = "arn:aws:sts::${data.aws_caller_identity.current.id}:assumed-role/AWSServiceRoleForAmazonEKS/{{SessionName}}"
-#   principal_arn = var.iam_role_main
-
-#   access_scope {
-#     type       = "cluster"
-#   }
-
-#   depends_on = [
-#     aws_iam_role_main_policy_attachment.cluster_AmazonEKSClusterAdminPolicy,
-#   ]
-# }

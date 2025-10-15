@@ -1,7 +1,3 @@
-# output "role_arn" {
-#   value = aws_iam_role.main.arn
-# }
-
 output "role_main" {
   value = aws_iam_role.main
 }
