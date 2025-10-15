@@ -33,11 +33,11 @@
 * deploy
     * fill `terraform-cluster/terraform.tfvars` variables according to your needs
     * run pre-configured script
-        * > [!NOTE]
-            > Comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
-            ```
-            ./_run-terraform.sh
-            ```
+        > [!NOTE]
+        > Comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
+        ```
+        ./_run-terraform.sh
+        ```
     * add kubectl context
         ```
         aws eks update-kubeconfig --region cluster_region --name cluster_name --alias cluster_name
