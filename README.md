@@ -1,6 +1,5 @@
-![Static Badge](https://img.shields.io/badge/Cosmo%20Tech-%23FFB039?style=flat-square)
-![Static Badge](https://img.shields.io/badge/Terraform-%237B42BC?style=flat-square)
-![Static Badge](https://img.shields.io/badge/AWS-%23ED7100?style=flat-square)
+![Static Badge](https://img.shields.io/badge/Cosmo%20Tech-%23FFB039?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/AWS-%23ED7100?style=for-the-badge)
 
 # Kubernetes cluster
 
