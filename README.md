@@ -1,4 +1,7 @@
-![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Static Badge](https://img.shields.io/badge/Cosmo%20Tech-%23FFB039?style=flat-square)
+![Static Badge](https://img.shields.io/badge/Terraform-%237B42BC?style=flat-square)
+![Static Badge](https://img.shields.io/badge/AWS-%23ED7100?style=flat-square)
+
 # Kubernetes cluster
 
 ## Requirements
