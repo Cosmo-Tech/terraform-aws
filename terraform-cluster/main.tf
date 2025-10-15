@@ -40,7 +40,8 @@ module "cluster" {
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
 
-  iam_role   = module.iam.role_arn
+  iam_role_main   = module.iam.role_main.arn
+  iam_role_eks_auto_mode   = module.iam.role_eks_auto_mode.arn
   subnet_ids = module.network.subnet_ids
   # route_id = module.network.route_id
   # nat_gateway_id1 = module.network.nat_gateway_id1
@@ -61,7 +62,7 @@ module "nodes" {
 
   cluster_id = module.cluster.cluster_id
 
-  iam_role   = module.iam.role_arn
+  iam_role_main   = module.iam.role_main.arn
   subnet_ids = module.network.subnet_ids
   # route_id = module.network.route_id
 

@@ -1,4 +1,4 @@
-resource "aws_iam_role" "role" {
+resource "aws_iam_role" "main" {
   name = "cosmotech-${local.main_name}"
   tags = local.tags
 
@@ -60,19 +60,6 @@ resource "aws_iam_role" "role" {
 
 
 
-# --- --- --- --- --- --- --- --- --- --- ---
-# Policies usages: 
-# AmazonEKSClusterPolicy              = EKS cluster requirement
-# AmazonEKSWorkerNodePolicy           = EKS node groups requirement
-# AmazonEKS_CNI_Policy                = EKS node groups requirement
-# AmazonEC2ContainerRegistryReadOnly  = EKS node groups requirement
-# AmazonEKSBlockStoragePolicy         = EKS auto mode requirement
-# AmazonEKSComputePolicy              = EKS auto mode requirement
-# AmazonEKSLoadBalancingPolicy        = EKS auto mode requirement
-# AmazonEKSNetworkingPolicy           = EKS auto mode requirement
-# --- --- --- --- --- --- --- --- --- --- ---
-
-
 resource "aws_iam_role_policy_attachment" "policies" {
 
   for_each = toset([
@@ -84,13 +71,19 @@ resource "aws_iam_role_policy_attachment" "policies" {
     "AmazonEKSComputePolicy",
     "AmazonEKSLoadBalancingPolicy",
     "AmazonEKSNetworkingPolicy",
+    # "AmazonEKSServicePolicy",
+    # "AmazonEKSVPCResourceController",
   ])
 
   policy_arn = "arn:aws:iam::aws:policy/${each.value}"
-  role       = aws_iam_role.role.name
+  role       = aws_iam_role.main.name
 
   depends_on = [
-    aws_iam_role.role,
+    aws_iam_role.main,
   ]
 }
 
+
+data "aws_iam_role" "eks_auto_mode" {
+  name = "AmazonEKSAutoNodeRole"
+}

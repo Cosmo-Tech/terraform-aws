@@ -33,7 +33,7 @@
     * **terraform-state-storage**
         * standalone module intended to facilitate creation of a S3 storage (that will be used to store states of others modules)
         * state of this module itselft will not be saved, once created it should never be changed
-        * manually create a S3 storage call "cosmotech-states" will have the same effect
+        * manually create a S3 storage called "cosmotech-states" will have the same effect
     * **terraform-cluster**
         * *dns* = pre-configure DNS zones that will be required in next deployments
         * *cluster* = Kubernetes cluster

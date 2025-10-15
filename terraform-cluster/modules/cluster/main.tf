@@ -2,7 +2,7 @@ resource "aws_eks_cluster" "cluster" {
   name = local.main_name
   tags = local.tags
 
-  role_arn                      = var.iam_role
+  role_arn                      = var.iam_role_main
   deletion_protection           = true
   bootstrap_self_managed_addons = false
 
@@ -13,7 +13,7 @@ resource "aws_eks_cluster" "cluster" {
   compute_config {
     enabled       = true
     node_pools    = ["system"]
-    node_role_arn = var.iam_role
+    node_role_arn = var.iam_role_eks_auto_mode
   }
 
   kubernetes_network_config {
@@ -36,10 +36,13 @@ resource "aws_eks_cluster" "cluster" {
 
   vpc_config {
     subnet_ids = var.subnet_ids
+
+    endpoint_private_access = "true"
+    endpoint_public_access  = "true"
   }
 
   depends_on = [
-    var.iam_role,
+    var.iam_role_main,
     var.subnet_ids,
   ]
 }
@@ -99,12 +102,12 @@ resource "aws_eks_addon" "addon-coredns" {
 
 
 # # Admin users
-# resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterAdminPolicy" {
+# resource "aws_iam_role_main_policy_attachment" "cluster_AmazonEKSClusterAdminPolicy" {
 #   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-#   role       = var.iam_role
+#   role       = var.iam_role_main
 
 #   depends_on = [
-#     var.iam_role,
+#     var.iam_role_main,
 #     aws_eks_cluster.cluster,
 #   ]
 # }
@@ -113,13 +116,13 @@ resource "aws_eks_addon" "addon-coredns" {
 #   cluster_name  = local.main_name
 #   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
 #   # principal_arn = "arn:aws:sts::${data.aws_caller_identity.current.id}:assumed-role/AWSServiceRoleForAmazonEKS/{{SessionName}}"
-#   principal_arn = var.iam_role
+#   principal_arn = var.iam_role_main
 
 #   access_scope {
 #     type       = "cluster"
 #   }
 
 #   depends_on = [
-#     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterAdminPolicy,
+#     aws_iam_role_main_policy_attachment.cluster_AmazonEKSClusterAdminPolicy,
 #   ]
 # }

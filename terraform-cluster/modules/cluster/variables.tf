@@ -22,6 +22,12 @@ variable "subnet_ids" {
 #   type = string
 # }
 
-variable "iam_role" {
+variable "iam_role_main" {
   type = string
 }
+
+variable "iam_role_eks_auto_mode" {
+  type = string
+}
+
+

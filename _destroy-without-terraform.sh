@@ -30,7 +30,24 @@ file_tmp_routetables="$file_tmp-routetables"
 # Get list of resources from a resource group and store it to a file
 # Usage: gt_rg_resources
 gt_rg_resources() {
+    local file_tmp_order="$file_tmp-order"
+
     aws resource-groups list-group-resources --group-name $rg_name | jq -r '.ResourceIdentifiers[].ResourceArn' > $file_tmp
+
+    # Set order of destruction
+    cat $file_tmp | grep nodegroup >> $file_tmp_order
+    cat $file_tmp | grep addon >> $file_tmp_order
+    cat $file_tmp | grep elastic-ip >> $file_tmp_order
+    cat $file_tmp | grep route-table >> $file_tmp_order
+    cat $file_tmp | grep natgateway >> $file_tmp_order
+    cat $file_tmp | grep internet-gateway >> $file_tmp_order
+    cat $file_tmp | grep cluster >> $file_tmp_order
+    cat $file_tmp | grep subnet >> $file_tmp_order
+    cat $file_tmp | grep vpc >> $file_tmp_order
+    cat $file_tmp | grep resource-groups >> $file_tmp_order
+
+    # Replace the original file
+    mv $file_tmp_order $file_tmp
 }
 
 # Simple timer to wait for a resource to be destroyed
@@ -59,6 +76,13 @@ else
     # Ask for confirmation
     read -p "enter resource group name to confirm destruction of all its resouces ('$rg_name'): " confirmation
     if [ "$(echo $confirmation)" = "$rg_name" ]; then
+
+        echo "looking for destruction protection..."
+        if [ "$(aws eks describe-cluster --name $rg_name | jq '.cluster.deletionProtection')" = "true" ]; then
+            echo "destruction protection is enabled on EKS '$rg_name', aborting..."
+            exit
+        fi
+
         echo "deleting resources from $rg_name..."
 
         # Try until everything has been deleted (because some resources have dependencies and might not be deleted the first time)
@@ -83,14 +107,14 @@ else
                     echo "deleting nat gateway      $resource_id"
                     aws ec2 delete-nat-gateway --nat-gateway-id $resource_id > /dev/null
 
-                    wait_resource_destruction $resource
+                    # wait_resource_destruction $resource
                 fi
 
                 if [ "$(echo $resource_type)" = "elastic-ip" ]; then
                     echo "deleting elastic ip       $resource_id"
                     aws ec2 release-address --allocation-id $resource_id > /dev/null
 
-                    wait_resource_destruction $resource
+                    # wait_resource_destruction $resource
                 fi
 
                 if [ "$(echo $resource_type)" = "nodegroup" ]; then
@@ -121,7 +145,7 @@ else
                 fi
 
                 if [ "$(echo $resource_type)" = "internet-gateway" ]; then
-                    echo "deleting internet gateway..."
+                    echo "deleting internet gateway $resource_id"
                     vpc_id="$(cat $file_tmp | cut -d '/' -f 2 | grep vpc)"
 
                     aws ec2 detach-internet-gateway --internet-gateway-id $resource_id --vpc-id $vpc_id > /dev/null
@@ -154,15 +178,15 @@ else
                     echo "deleting vpc              $resource_id"
                     aws ec2 delete-vpc --vpc-id $resource_id > /dev/null
 
-                    # wait_resource_destruction $resource
-                fi
-
-                if [ "$(echo $resource_type)" = "launch-template" ]; then
-                    echo "deleting launch template  $resource_id"
-                    aws ec2 delete-launch-template --launch-template-id $resource_id > /dev/null
- 
                     wait_resource_destruction $resource
                 fi
+
+                # if [ "$(echo $resource_type)" = "launch-template" ]; then
+                #     echo "deleting launch template  $resource_id"
+                #     aws ec2 delete-launch-template --launch-template-id $resource_id > /dev/null
+ 
+                #     wait_resource_destruction $resource
+                # fi
 
                 if [ "$(echo $resource_type)" = "resource-groups" ]; then
                     echo "deleting resource group   $resource_id"
