@@ -1,6 +1,8 @@
 resource "aws_eks_cluster" "cluster" {
-  name = local.main_name
   tags = local.tags
+
+  name   = local.main_name
+  region = var.cluster_region
 
   role_arn                      = var.iam_role_main
   deletion_protection           = true
@@ -52,6 +54,7 @@ resource "aws_eks_addon" "addon-vpc_cni" {
 
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "vpc-cni"
+  region       = var.cluster_region
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -63,6 +66,7 @@ resource "aws_eks_addon" "addon-kube_proxy" {
 
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "kube-proxy"
+  region       = var.cluster_region
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -74,6 +78,8 @@ resource "aws_eks_addon" "addon-coredns" {
 
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "coredns"
+  region       = var.cluster_region
+
   # addon_version               = "v1.10.1-eksbuild.1"
   # resolve_conflicts_on_create = "OVERWRITE"
 

@@ -22,6 +22,7 @@ resource "aws_vpc" "vpc" {
     },
   )
 
+  region               = var.cluster_region
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
   enable_dns_support   = true
@@ -38,6 +39,7 @@ resource "aws_subnet" "wan_subnet" {
     },
   )
 
+  region                  = var.cluster_region
   availability_zone       = data.aws_availability_zones.available.names[0]
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 100)
@@ -56,6 +58,7 @@ resource "aws_internet_gateway" "wan_ig" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   depends_on = [
@@ -71,6 +74,7 @@ resource "aws_route_table" "wan_rt" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   route {
@@ -85,9 +89,10 @@ resource "aws_route_table" "wan_rt" {
 }
 
 resource "aws_route_table_association" "wan_rt" {
+  region = var.cluster_region
+
   subnet_id      = aws_subnet.wan_subnet.id
   route_table_id = aws_route_table.wan_rt.id
-  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.wan_subnet,
@@ -110,11 +115,11 @@ resource "aws_nat_gateway" "nat" {
     },
   )
 
-  subnet_id = aws_subnet.wan_subnet.id
-  # connectivity_type = "private"
+  region = var.cluster_region
+
+  subnet_id         = aws_subnet.wan_subnet.id
   connectivity_type = "public"
   allocation_id     = aws_eip.nat_ip.id
-
 }
 # -- NAT --
 
@@ -130,8 +135,9 @@ resource "aws_subnet" "lan_subnets" {
 
   count = 2
 
-  vpc_id                  = aws_vpc.vpc.id
+  region                  = var.cluster_region
   availability_zone       = data.aws_availability_zones.available.names[count.index]
+  vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index + 1)
   map_public_ip_on_launch = true
 }
@@ -144,6 +150,7 @@ resource "aws_route_table" "lan_rt" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   route {
@@ -162,9 +169,9 @@ resource "aws_route_table_association" "lan_rt" {
 
   count = 2
 
+  region         = var.cluster_region
   subnet_id      = aws_subnet.lan_subnets[count.index].id
   route_table_id = aws_route_table.lan_rt.id
-  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.lan_subnets,

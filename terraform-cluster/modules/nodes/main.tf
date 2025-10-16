@@ -45,6 +45,7 @@ resource "aws_eks_node_group" "node_groups" {
   tags = local.tags
 
   cluster_name = local.main_name
+  region       = var.cluster_region
 
   node_group_name = "${local.main_name}-${each.value.tier}"
   node_role_arn   = var.iam_role_main

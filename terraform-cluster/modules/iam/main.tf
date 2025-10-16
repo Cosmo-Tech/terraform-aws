@@ -1,6 +1,7 @@
 resource "aws_iam_role" "main" {
-  name = "cosmotech-${local.main_name}"
   tags = local.tags
+
+  name = "cosmotech-${local.main_name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,7 +21,6 @@ resource "aws_iam_role" "main" {
 }
 
 resource "aws_iam_role_policy_attachment" "policies" {
-
   for_each = toset([
     "AmazonEKSClusterPolicy",
     "AmazonEKSWorkerNodePolicy",
