@@ -50,7 +50,7 @@
             * click on "Create"
     * add kubectl context
         ```
-        aws eks update-kubeconfig --name cluster_name --alias cluster_name
+        sh -c 'aws eks update-kubeconfig --name $0 --alias $0' CLUSTERNAME
         ```
     * try a kubectl command to ensure the access is working
         ```
