@@ -111,3 +111,14 @@ module "nodes" {
   }
 }
 
+
+# ## DNS
+# module "dns" {
+#   source = "./modules/dns"
+
+#   additional_tags = var.additional_tags
+#   cluster_name    = var.cluster_name
+#   cluster_stage   = var.cluster_stage
+#   cluster_region  = var.cluster_region
+
+# }
