@@ -48,7 +48,7 @@
             * Access scope = Cluster
             * click on "Add policy"
             * click on "Create"
-    * add kubectl context
+    * add kube context (replace 'CLUSTERNAME' below with the real cluster name)
         ```
         sh -c 'aws eks update-kubeconfig --name $0 --alias $0' CLUSTERNAME
         ```
