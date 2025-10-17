@@ -28,7 +28,7 @@
     ```
 * open cloned repository
     ```
-    cd terraform-eks
+    cd terraform-aws
     ```
 * deploy
     * fill `terraform-cluster/terraform.tfvars` variables according to your needs
