@@ -1,6 +1,6 @@
-cluster_name   = "devops4"
+cluster_name   = "devops6"
 cluster_stage  = "dev"
-cluster_region = "us-west-1"
+cluster_region = "eu-west-3"
 
 # You can add or remove tags according to your needs (the following list is just an example)
 # default tags will be registered: "rg" (resource group), "stage" (based on given stage), "vendor" (="cosmotech")

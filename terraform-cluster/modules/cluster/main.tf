@@ -37,7 +37,7 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   vpc_config {
-    subnet_ids = var.subnet_ids
+    subnet_ids = var.lan_subnet_ids
 
     endpoint_private_access = "true"
     endpoint_public_access  = "true"
@@ -45,7 +45,10 @@ resource "aws_eks_cluster" "cluster" {
 
   depends_on = [
     var.iam_role_main,
-    var.subnet_ids,
+    # var.lan_subnet_ids,
+    # var.wan_subnet_id, # Be sure to have internet access
+    var.nat_id,
+    var.wan_ig_id, # Be sure to have internet access
   ]
 }
 

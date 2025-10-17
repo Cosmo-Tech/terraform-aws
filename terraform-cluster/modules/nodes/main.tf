@@ -49,7 +49,7 @@ resource "aws_eks_node_group" "node_groups" {
 
   node_group_name = "${local.main_name}-${each.value.tier}"
   node_role_arn   = var.iam_role_main
-  subnet_ids      = var.subnet_ids
+  subnet_ids      = var.lan_subnet_ids
 
   instance_types = ["${each.value.machine_type}"]
   ami_type       = "AL2023_x86_64_STANDARD"
@@ -77,6 +77,9 @@ resource "aws_eks_node_group" "node_groups" {
   depends_on = [
     var.iam_role_main,
     var.cluster_id,
-    var.subnet_ids,
+    # var.lan_subnet_ids,
+    # var.wan_subnet_id, # Be sure to have internet access
+    var.nat_id,
+    var.wan_ig_id, # Be sure to have internet access
   ]
 }

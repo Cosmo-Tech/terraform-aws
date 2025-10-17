@@ -42,7 +42,10 @@ module "cluster" {
 
   iam_role_main          = module.iam.role_main.arn
   iam_role_eks_auto_mode = module.iam.role_eks_auto_mode.arn
-  subnet_ids             = module.network.subnet_ids
+  lan_subnet_ids         = module.network.lan_subnet_ids
+  # wan_subnet_id  = module.network.wan_subnet_id
+  nat_id    = module.network.nat_id
+  wan_ig_id = module.network.wan_ig_id
 }
 
 
@@ -57,8 +60,11 @@ module "nodes" {
 
   cluster_id = module.cluster.cluster_id
 
-  iam_role_main = module.iam.role_main.arn
-  subnet_ids    = module.network.subnet_ids
+  iam_role_main  = module.iam.role_main.arn
+  lan_subnet_ids = module.network.lan_subnet_ids
+  # wan_subnet_id  = module.network.wan_subnet_id
+  nat_id    = module.network.nat_id
+  wan_ig_id = module.network.wan_ig_id
 
   node_groups = {
     monitoring = {
@@ -70,7 +76,7 @@ module "nodes" {
 
     services = {
       machine_type = "t3a.xlarge"
-      min          = 0
+      min          = 1
       max          = 3
       tier         = "services"
     }

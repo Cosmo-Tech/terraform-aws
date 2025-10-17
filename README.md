@@ -37,10 +37,6 @@
         ```
         ./_run-terraform.sh
         ```
-    * add kubectl context
-        ```
-        aws eks update-kubeconfig --region cluster_region --name cluster_name --alias cluster_name
-        ```
     * to be able to connect to cluster with kubectl, your current AWS user must have the right. 
         > Without good permissions, "system" node pool will also appear as "Unknown"
         * go to AWS > EKS > deployed cluster > Access
@@ -52,6 +48,10 @@
             * Access scope = Cluster
             * click on "Add policy"
             * click on "Create"
+    * add kubectl context
+        ```
+        aws eks update-kubeconfig --name cluster_name --alias cluster_name
+        ```
     * try a kubectl command to ensure the access is working
         ```
         kubectl get nodes
@@ -64,9 +64,13 @@
         * state of this module itselft will not be saved, once created it should never be changed
         * manually create a S3 storage called "cosmotech-states" will have the same effect
     * **terraform-cluster**
-        * *dns* = pre-configure DNS zones that will be required in next deployments
+        * *autostartstop* = automatically start & stop cluster on given timers
         * *cluster* = Kubernetes cluster
-        * *cluster-nodes* = Kubernetes cluster nodes
+        * *dns* = pre-configure DNS zones that will be required in next deployments
+        * *iam* = permission management
+        * *network* = network management
+        * *nodes* = Kubernetes cluster nodes
+        * *rg* = organize resources over the cloud provider
 
 * global_variables.tf files contains wide used variables and are symbolics links to the main variables.tf (to avoid code duplication).
     *copy/paste following block to ensure having global_variables.tf files in all child modules*
