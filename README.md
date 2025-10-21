@@ -15,9 +15,21 @@
     ```
     aws configure
     ```
-    * If you are using  from AWS access portal
-        * open "Access keys"
-        * copy/paste `aws_access_key_id`, `aws_secret_access_key` and `aws_session_token`
+    * depending on type of authentication:
+        * SSO user *(IAM Identity Center, AWS access portal)*
+            * click on open "Access keys" beside the role you want to use
+            * copy/paste `aws_access_key_id`, `aws_secret_access_key` and `aws_session_token` to the terminal command
+        * basic user *(IAM)*
+            * go to AWS > IAM
+                * open concerned user
+                * go to "Security credentials"
+                    * create an "Access key"
+                        * Use case = *Command line Interface (CLI)*
+                        * check "I understand the above recommandations and want to proceed to create an access key"
+                        * click on "Next"
+                        * Decription tag value = `aws-cli`
+                        * copy/paste `aws_access_key_id`, `aws_secret_access_key` to the terminal command
+                        * Click on "Done"
     * ensure the connection is working
         ```
         aws sts get-caller-identity
@@ -33,12 +45,12 @@
 * deploy
     * fill `terraform-cluster/terraform.tfvars` variables according to your needs
     * run pre-configured script
-        > :information_source: Comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
+        > :information_source: comment/uncomment the `terraform apply` line at the end to get a plan without deploy anything
         ```
         ./_run-terraform.sh
         ```
     * to be able to connect to cluster with kubectl, your current AWS user must have the right. 
-        > Without good permissions, "system" node pool will also appear as "Unknown"
+        > without good permissions, "system" node pool will appear as "Unknown"
         * go to AWS > EKS > deployed cluster > Access
         * create an assignment
             * IAM principal ARN = *your current user*
@@ -62,7 +74,7 @@
     * **terraform-state-storage**
         * standalone module intended to facilitate creation of a S3 storage (that will be used to store states of others modules)
         * state of this module itselft will not be saved, once created it should never be changed
-        * manually create a S3 storage called "cosmotech-states" will have the same effect
+        * manually create a S3 storage called `cosmotech-states` will have the same effect
     * **terraform-cluster**
         * *autostartstop* = automatically start & stop cluster on given timers
         * *cluster* = Kubernetes cluster

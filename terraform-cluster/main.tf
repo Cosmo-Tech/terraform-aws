@@ -46,6 +46,37 @@ module "cluster" {
   # wan_subnet_id  = module.network.wan_subnet_id
   nat_id    = module.network.nat_id
   wan_ig_id = module.network.wan_ig_id
+
+  # addons = {
+  #   coredns = {
+  #     replica_count   = 1
+  #     cpu_limit       = "100m"
+  #     cpu_requests    = "100m"
+  #     memory_limit    = "150Mi"
+  #     memory_requests = "150Mi"
+  #   }
+  #   kube-proxy = {
+  #     replica_count   = 1
+  #     cpu_limit       = "100m"
+  #     cpu_requests    = "100m"
+  #     memory_limit    = "150Mi"
+  #     memory_requests = "150Mi"
+  #   }
+  #   vpc-cni = {
+  #     replica_count   = 1
+  #     cpu_limit       = "100m"
+  #     cpu_requests    = "100m"
+  #     memory_limit    = "150Mi"
+  #     memory_requests = "150Mi"
+  #   }
+  #   aws-ebs-csi-driver = {
+  #     replica_count   = 1
+  #     cpu_limit       = "100m"
+  #     cpu_requests    = "100m"
+  #     memory_limit    = "150Mi"
+  #     memory_requests = "150Mi"
+  #   }
+  # }
 }
 
 
@@ -68,45 +99,40 @@ module "nodes" {
 
   node_groups = {
     monitoring = {
+      tier         = "monitoring"
       machine_type = "t3.small"
       min          = 1
       max          = 2
-      tier         = "monitoring"
     }
-
     services = {
+      tier         = "services"
       machine_type = "t3a.xlarge"
       min          = 1
       max          = 3
-      tier         = "services"
     }
-
     db = {
+      tier         = "db"
       machine_type = "t3a.large"
       min          = 1
       max          = 4
-      tier         = "db"
     }
-
     basic = {
+      tier         = "basic"
       machine_type = "c5d.xlarge"
       min          = 1
       max          = 4
-      tier         = "basic"
     }
-
     highcpu = {
+      tier         = "highcpu"
       machine_type = "c5d.18xlarge"
       min          = 0
       max          = 3
-      tier         = "highcpu"
     }
-
     highmemory = {
+      tier         = "highmemory"
       machine_type = "r5ad.4xlarge"
       min          = 0
       max          = 3
-      tier         = "highmemory"
     }
   }
 }

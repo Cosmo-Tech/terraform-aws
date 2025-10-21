@@ -52,12 +52,42 @@ resource "aws_eks_cluster" "cluster" {
   ]
 }
 
+# resource "aws_eks_addon" "addons" {
+#   for_each = var.addons
+
+#   tags = local.tags
+
+#   cluster_name = aws_eks_cluster.cluster.name
+#   region       = var.cluster_region
+
+#   addon_name   = each.key
+
+#   configuration_values = jsonencode({
+#     replicaCount = each.value.replica_count
+#     resources = {
+#       limits = {
+#         cpu    = "${each.value.cpu_limit}"
+#         memory = "${each.value.memory_limit}"
+#       }
+#       requests = {
+#         cpu    = "${each.value.cpu_requests}"
+#         memory = "${each.value.memory_requests}"
+#       }
+#     }
+#   })
+
+#   depends_on = [
+#     aws_eks_cluster.cluster,
+#   ]
+# }
+
 resource "aws_eks_addon" "addon-vpc_cni" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "vpc-cni"
   region       = var.cluster_region
+
+  addon_name   = "vpc-cni"
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -68,8 +98,9 @@ resource "aws_eks_addon" "addon-kube_proxy" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "kube-proxy"
   region       = var.cluster_region
+
+  addon_name   = "kube-proxy"
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -80,8 +111,9 @@ resource "aws_eks_addon" "addon-coredns" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "coredns"
   region       = var.cluster_region
+
+  addon_name   = "coredns"
 
   # addon_version               = "v1.10.1-eksbuild.1"
   # resolve_conflicts_on_create = "OVERWRITE"
@@ -104,3 +136,18 @@ resource "aws_eks_addon" "addon-coredns" {
     aws_eks_cluster.cluster,
   ]
 }
+
+resource "aws_eks_addon" "addon-ebs_csi_driver" {
+  tags = local.tags
+
+  cluster_name = aws_eks_cluster.cluster.name
+  region       = var.cluster_region
+
+  addon_name   = "aws-ebs-csi-driver"
+
+  depends_on = [
+    aws_eks_cluster.cluster,
+  ]
+}
+
+

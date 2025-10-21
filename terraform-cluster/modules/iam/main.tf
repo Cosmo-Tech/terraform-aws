@@ -41,6 +41,20 @@ resource "aws_iam_role_policy_attachment" "policies" {
 }
 
 
+resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
+  for_each = toset([
+    "AmazonEBSCSIDriverPolicy",
+  ])
+
+  policy_arn = "arn:aws:iam::aws:policy/service-role/${each.value}"
+  role       = aws_iam_role.main.name
+
+  depends_on = [
+    aws_iam_role.main,
+  ]
+}
+
+
 data "aws_iam_role" "eks_auto_mode" {
   name = "AmazonEKSAutoNodeRole"
 }

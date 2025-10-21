@@ -22,4 +22,12 @@ variable "iam_role_eks_auto_mode" {
   type = string
 }
 
-
+# variable "addons" {
+#   type = map(object({
+#     replica_count   = number
+#     cpu_limit       = string
+#     cpu_requests    = string
+#     memory_limit    = string
+#     memory_requests = string
+#   }))
+# }

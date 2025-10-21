@@ -23,11 +23,10 @@ variable "cluster_id" {
 }
 
 variable "node_groups" {
-  description = "Map of node pool definitions"
   type = map(object({
+    tier         = string
     machine_type = string
     min          = number
     max          = number
-    tier         = string
   }))
 }
