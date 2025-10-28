@@ -87,7 +87,7 @@ resource "aws_eks_addon" "addon-vpc_cni" {
   cluster_name = aws_eks_cluster.cluster.name
   region       = var.cluster_region
 
-  addon_name   = "vpc-cni"
+  addon_name = "vpc-cni"
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -100,7 +100,7 @@ resource "aws_eks_addon" "addon-kube_proxy" {
   cluster_name = aws_eks_cluster.cluster.name
   region       = var.cluster_region
 
-  addon_name   = "kube-proxy"
+  addon_name = "kube-proxy"
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -113,7 +113,7 @@ resource "aws_eks_addon" "addon-coredns" {
   cluster_name = aws_eks_cluster.cluster.name
   region       = var.cluster_region
 
-  addon_name   = "coredns"
+  addon_name = "coredns"
 
   # addon_version               = "v1.10.1-eksbuild.1"
   # resolve_conflicts_on_create = "OVERWRITE"
@@ -137,17 +137,17 @@ resource "aws_eks_addon" "addon-coredns" {
   ]
 }
 
-resource "aws_eks_addon" "addon-ebs_csi_driver" {
-  tags = local.tags
+# resource "aws_eks_addon" "addon-ebs_csi_driver" {
+#   tags = local.tags
 
-  cluster_name = aws_eks_cluster.cluster.name
-  region       = var.cluster_region
+#   cluster_name = aws_eks_cluster.cluster.name
+#   region       = var.cluster_region
 
-  addon_name   = "aws-ebs-csi-driver"
+#   addon_name = "aws-ebs-csi-driver"
 
-  depends_on = [
-    aws_eks_cluster.cluster,
-  ]
-}
+#   depends_on = [
+#     aws_eks_cluster.cluster,
+#   ]
+# }
 
 

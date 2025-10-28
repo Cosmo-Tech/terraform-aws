@@ -63,12 +63,13 @@ rm -rf terraform-cluster/.terraform*
 terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="region=$state_storage_region" -backend-config="key=tfstate-eks-$cluster_stage-$cluster_name"
 terraform -chdir=terraform-cluster plan -out .terraform.plan
 
-while read -p "Apply? [write 'yes please' to confirm] (CTRL+C to exit): " apply_confirmation
-do
-    if [ "$(echo $apply_confirmation)" = "yes please" ]; then
+# echo ""
+# while read -p "Apply? [write 'yes please' to confirm] (CTRL+C to exit): " apply_confirmation
+# do
+#     if [ "$(echo $apply_confirmation)" = "yes please" ]; then
         terraform -chdir=terraform-cluster apply .terraform.plan
-        break
-    fi
-done
+#         break
+#     fi
+# done
 
 exit

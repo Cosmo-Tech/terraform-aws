@@ -104,6 +104,15 @@ resource "aws_route_table_association" "wan_rt" {
 
 # -- NAT --
 resource "aws_eip" "nat_ip" {
+  tags = merge(
+    local.tags,
+    {
+      Name = "${local.main_name}-nat-ip",
+    },
+  )
+
+  region = var.cluster_region
+
   domain = "vpc"
 }
 
@@ -123,6 +132,7 @@ resource "aws_nat_gateway" "nat" {
 
   depends_on = [
     aws_eip.nat_ip,
+    aws_internet_gateway.wan_ig,
   ]
 }
 # -- NAT --
