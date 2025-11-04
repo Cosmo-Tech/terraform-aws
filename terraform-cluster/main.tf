@@ -102,46 +102,46 @@ module "nodes" {
       tier         = "monitoring"
       machine_type = "t3a.micro"
       # machine_type = "t3.small"
-      min          = 1
+      min = 1
       # min          = 0
-      max          = 2
+      max = 2
     }
     services = {
       tier         = "services"
       machine_type = "t3a.micro"
       # machine_type = "t3a.xlarge"
-      min          = 1
+      min = 1
       # min          = 0
-      max          = 3
+      max = 3
     }
     db = {
       tier         = "db"
       machine_type = "t3a.micro"
       # machine_type = "t3a.large"
-      min          = 1
+      min = 1
       # min          = 0
-      max          = 4
+      max = 4
     }
     basic = {
       tier         = "basic"
       machine_type = "t3a.micro"
       # machine_type = "c5d.xlarge"
-      min          = 1
-      max          = 4
+      min = 1
+      max = 4
     }
     highcpu = {
       tier         = "highcpu"
       machine_type = "t3a.micro"
       # machine_type = "c5d.18xlarge"
-      min          = 0
-      max          = 3
+      min = 0
+      max = 3
     }
     highmemory = {
       tier         = "highmemory"
       machine_type = "t3a.micro"
       # machine_type = "r5ad.4xlarge"
-      min          = 0
-      max          = 3
+      min = 0
+      max = 3
     }
   }
 }

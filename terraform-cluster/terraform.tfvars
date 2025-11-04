@@ -1,4 +1,4 @@
-cluster_name   = "devops6"
+cluster_name   = "devops0"
 cluster_stage  = "dev"
 cluster_region = "eu-west-3"
 

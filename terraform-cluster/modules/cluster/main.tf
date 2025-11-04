@@ -52,36 +52,8 @@ resource "aws_eks_cluster" "cluster" {
   ]
 }
 
-# resource "aws_eks_addon" "addons" {
-#   for_each = var.addons
 
-#   tags = local.tags
-
-#   cluster_name = aws_eks_cluster.cluster.name
-#   region       = var.cluster_region
-
-#   addon_name   = each.key
-
-#   configuration_values = jsonencode({
-#     replicaCount = each.value.replica_count
-#     resources = {
-#       limits = {
-#         cpu    = "${each.value.cpu_limit}"
-#         memory = "${each.value.memory_limit}"
-#       }
-#       requests = {
-#         cpu    = "${each.value.cpu_requests}"
-#         memory = "${each.value.memory_requests}"
-#       }
-#     }
-#   })
-
-#   depends_on = [
-#     aws_eks_cluster.cluster,
-#   ]
-# }
-
-resource "aws_eks_addon" "addon-vpc_cni" {
+resource "aws_eks_addon" "vpc_cni" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
@@ -94,7 +66,7 @@ resource "aws_eks_addon" "addon-vpc_cni" {
   ]
 }
 
-resource "aws_eks_addon" "addon-kube_proxy" {
+resource "aws_eks_addon" "kube_proxy" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
@@ -107,7 +79,7 @@ resource "aws_eks_addon" "addon-kube_proxy" {
   ]
 }
 
-resource "aws_eks_addon" "addon-coredns" {
+resource "aws_eks_addon" "coredns" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
@@ -137,7 +109,53 @@ resource "aws_eks_addon" "addon-coredns" {
   ]
 }
 
-# resource "aws_eks_addon" "addon-ebs_csi_driver" {
+
+
+resource "aws_eks_addon" "ebs_csi_driver" {
+  tags = local.tags
+
+  cluster_name = aws_eks_cluster.cluster.name
+  region       = var.cluster_region
+
+  addon_name = "aws-ebs-csi-driver"
+  # addon_version            = "v1.29.1-eksbuild.1"
+  # service_account_role_arn = var.iam_role_main
+
+
+  
+  configuration_values        = null
+  preserve                    = true
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+  service_account_role_arn    = null
+
+  depends_on = [
+    aws_eks_cluster.cluster,
+  ]
+}
+
+
+# resource "aws_eks_addon" "this" {
+
+#   cluster_name = aws_eks_cluster.main.name
+#   addon_name   = "aws-ebs-csi-driver"
+
+#   addon_version               = data.aws_eks_addon_version.this.version
+#   configuration_values        = null
+#   preserve                    = true
+#   resolve_conflicts_on_create = "OVERWRITE"
+#   resolve_conflicts_on_update = "OVERWRITE"
+#   service_account_role_arn    = null
+
+#   depends_on = [
+#     aws_eks_node_group.main
+#   ]
+
+# }
+
+
+
+# resource "aws_eks_addon" "ebs_csi_driver" {
 #   tags = local.tags
 
 #   cluster_name = aws_eks_cluster.cluster.name
