@@ -86,7 +86,6 @@ resource "aws_eks_addon" "coredns" {
   region       = var.cluster_region
 
   addon_name = "coredns"
-
   # addon_version               = "v1.10.1-eksbuild.1"
   # resolve_conflicts_on_create = "OVERWRITE"
 
@@ -111,23 +110,32 @@ resource "aws_eks_addon" "coredns" {
 
 
 
+# data "aws_availability_zones" "available" {
+#   region = var.cluster_region
+#   state  = "available"
+# }
+
 resource "aws_eks_addon" "ebs_csi_driver" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
   region       = var.cluster_region
+  # region       = data.aws_availability_zones.available
 
   addon_name = "aws-ebs-csi-driver"
   # addon_version            = "v1.29.1-eksbuild.1"
   # service_account_role_arn = var.iam_role_main
-
-
   
   configuration_values        = null
   preserve                    = true
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-  service_account_role_arn    = null
+  # service_account_role_arn    = null
+
+  pod_identity_association {
+    role_arn = var.iam_role_main
+    service_account = "ebs-csi-controller-sa"
+  }
 
   depends_on = [
     aws_eks_cluster.cluster,
@@ -135,37 +143,5 @@ resource "aws_eks_addon" "ebs_csi_driver" {
 }
 
 
-# resource "aws_eks_addon" "this" {
-
-#   cluster_name = aws_eks_cluster.main.name
-#   addon_name   = "aws-ebs-csi-driver"
-
-#   addon_version               = data.aws_eks_addon_version.this.version
-#   configuration_values        = null
-#   preserve                    = true
-#   resolve_conflicts_on_create = "OVERWRITE"
-#   resolve_conflicts_on_update = "OVERWRITE"
-#   service_account_role_arn    = null
-
-#   depends_on = [
-#     aws_eks_node_group.main
-#   ]
-
-# }
-
-
-
-# resource "aws_eks_addon" "ebs_csi_driver" {
-#   tags = local.tags
-
-#   cluster_name = aws_eks_cluster.cluster.name
-#   region       = var.cluster_region
-
-#   addon_name = "aws-ebs-csi-driver"
-
-#   depends_on = [
-#     aws_eks_cluster.cluster,
-#   ]
-# }
 
 

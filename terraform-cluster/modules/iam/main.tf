@@ -2,7 +2,6 @@ resource "aws_iam_role" "main" {
   tags = local.tags
 
   name = "cosmotech-${local.main_name}"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -13,12 +12,17 @@ resource "aws_iam_role" "main" {
           "sts:TagSession"
         ]
         Principal = {
-          Service = ["eks.amazonaws.com", "ec2.amazonaws.com"]
+          Service = [
+            "eks.amazonaws.com",
+            "ec2.amazonaws.com",
+            "pods.eks.amazonaws.com"
+          ]
         }
       },
     ]
   })
 }
+
 
 resource "aws_iam_role_policy_attachment" "policies" {
   for_each = toset([
@@ -40,7 +44,6 @@ resource "aws_iam_role_policy_attachment" "policies" {
   ]
 }
 
-
 resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
   for_each = toset([
     "AmazonEBSCSIDriverPolicy",
@@ -58,3 +61,46 @@ resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
 data "aws_iam_role" "eks_auto_mode" {
   name = "AmazonEKSAutoNodeRole"
 }
+
+
+
+
+# resource "aws_iam_role" "ebs_csi_driver" {
+#   tags = local.tags
+
+#   name = "cosmotech-${local.main_name}"
+
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect = "Allow"
+#         Action = [
+#           "sts:AssumeRole",
+#           "sts:TagSession"
+#         ]
+#         Principal = {
+#           Service = [
+#             "eks.amazonaws.com",
+#             "ec2.amazonaws.com"
+#           ]
+#         }
+#       },
+#     ]
+#   })
+# }
+
+
+# resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
+#   for_each = toset([
+#     "AmazonEBSCSIDriverPolicy",
+#   ])
+
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/${each.value}"
+#   role       = aws_iam_role.ebs_csi_driver.name
+
+#   depends_on = [
+#     aws_iam_role.ebs_csi_driver,
+#   ]
+# }
+
