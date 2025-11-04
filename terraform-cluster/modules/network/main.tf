@@ -192,3 +192,34 @@ resource "aws_route_table_association" "lan_rt" {
     aws_route_table.lan_rt,
   ]
 }
+
+
+
+
+
+
+
+# resource "aws_lb" "load_balancer" {
+#   tags = local.tags
+
+#   name               = local.main_name
+#   internal           = false
+#   load_balancer_type = "application"
+
+#   # subnets            = [
+#   #   for subnet in aws_subnet.wan_subnet : subnet.id
+#   #   ]
+
+#   # enable_deletion_protection = true
+
+#   subnet_mapping {
+#     subnet_id = aws_subnet.lan_subnets[0].id
+#   }
+
+#   subnet_mapping {
+#     subnet_id = aws_subnet.lan_subnets[1].id
+#   }
+# }
+
+
+

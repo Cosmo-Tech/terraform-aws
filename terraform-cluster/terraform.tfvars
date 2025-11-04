@@ -7,3 +7,8 @@ cluster_region = "eu-west-3"
 additional_tags = {
   cost_center = "n/a"
 }
+
+
+# For non-Cosmo Tech clusters, a domain name must be setted here.
+# Otherwise, cosmotech.com will be used.
+alternative_domain_name = ""

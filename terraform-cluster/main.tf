@@ -6,6 +6,8 @@ module "rg" {
   cluster_name    = var.cluster_name
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
+  # domain_name     = local.domain_name
+  alternative_domain_name = ""
 }
 
 
@@ -17,6 +19,8 @@ module "iam" {
   cluster_name    = var.cluster_name
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
+  # domain_name     = local.domain_name
+  alternative_domain_name = ""
 }
 
 
@@ -28,6 +32,8 @@ module "network" {
   cluster_name    = var.cluster_name
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
+  # domain_name     = local.domain_name
+  alternative_domain_name = ""
 }
 
 
@@ -39,6 +45,8 @@ module "cluster" {
   cluster_name    = var.cluster_name
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
+  # domain_name     = local.domain_name
+  alternative_domain_name = ""
 
   iam_role_main          = module.iam.role_main.arn
   iam_role_eks_auto_mode = module.iam.role_eks_auto_mode.arn
@@ -88,6 +96,8 @@ module "nodes" {
   cluster_name    = var.cluster_name
   cluster_stage   = var.cluster_stage
   cluster_region  = var.cluster_region
+  # domain_name     = local.domain_name
+  alternative_domain_name = ""
 
   cluster_id = module.cluster.cluster_id
 
@@ -99,27 +109,25 @@ module "nodes" {
 
   node_groups = {
     monitoring = {
-      tier         = "monitoring"
-      machine_type = "t3a.micro"
-      # machine_type = "t3.small"
-      min = 1
+      tier = "monitoring"
+      # machine_type = "t3a.micro"
+      machine_type = "t3.small"
+      min          = 1
       # min          = 0
       max = 2
     }
     services = {
-      tier         = "services"
-      machine_type = "t3a.micro"
-      # machine_type = "t3a.xlarge"
-      min = 1
-      # min          = 0
-      max = 3
+      tier = "services"
+      # machine_type = "t3a.micro"
+      machine_type = "t3a.xlarge"
+      min          = 1
+      max          = 3
     }
     db = {
       tier         = "db"
       machine_type = "t3a.micro"
       # machine_type = "t3a.large"
       min = 1
-      # min          = 0
       max = 4
     }
     basic = {
@@ -147,13 +155,18 @@ module "nodes" {
 }
 
 
-# ## DNS
-# module "dns" {
-#   source = "./modules/dns"
+## DNS
+module "dns" {
+  source = "./modules/dns"
 
-#   additional_tags = var.additional_tags
-#   cluster_name    = var.cluster_name
-#   cluster_stage   = var.cluster_stage
-#   cluster_region  = var.cluster_region
+  additional_tags = var.additional_tags
+  cluster_name    = var.cluster_name
+  cluster_stage   = var.cluster_stage
+  cluster_region  = var.cluster_region
 
-# }
+  # domain_name = var.alternative_domain_name ? var.alternative_domain_name : "${var.cluster_name}.aws.platform.cosmotech.com"
+
+  main_name = local.main_name
+  domain_name = local.domain_name
+  alternative_domain_name = ""
+}

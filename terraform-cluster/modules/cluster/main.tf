@@ -125,7 +125,7 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   addon_name = "aws-ebs-csi-driver"
   # addon_version            = "v1.29.1-eksbuild.1"
   # service_account_role_arn = var.iam_role_main
-  
+
   configuration_values        = null
   preserve                    = true
   resolve_conflicts_on_create = "OVERWRITE"
@@ -133,7 +133,7 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   # service_account_role_arn    = null
 
   pod_identity_association {
-    role_arn = var.iam_role_main
+    role_arn        = var.iam_role_main
     service_account = "ebs-csi-controller-sa"
   }
 
@@ -141,7 +141,6 @@ resource "aws_eks_addon" "ebs_csi_driver" {
     aws_eks_cluster.cluster,
   ]
 }
-
 
 
 

@@ -10,6 +10,8 @@ locals {
     },
   )
 
+  domain_name = var.alternative_domain_name == null ? var.alternative_domain_name : "aws.platform.cosmotech.com"
+  # domain_name = "aws.platform.cosmotech.com"
 }
 
 variable "cluster_name" {
@@ -35,4 +37,9 @@ variable "cluster_region" {
 variable "additional_tags" {
   description = "List of tags"
   type        = map(string)
+}
+
+variable "alternative_domain_name" {
+  description = "Altenative domain name for non Cosmo Tech deployments"
+  type        = string
 }
