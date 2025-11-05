@@ -144,3 +144,22 @@ resource "aws_eks_addon" "ebs_csi_driver" {
 
 
 
+
+resource "kubernetes_storage_class" "cosmotech-retain" {
+  metadata {
+    name = "cosmotech-retain"
+  }
+  storage_provisioner = "kubernetes.io/aws-ebs"
+  reclaim_policy      = "Retain"
+  volume_binding_mode = "WaitForFirstConsumer"
+  parameters = {
+    "fstype" = "ext4"
+    "type" = "gp3"
+  }
+
+
+  depends_on = [
+    aws_eks_addon.ebs_csi_driver,
+  ]
+}
+

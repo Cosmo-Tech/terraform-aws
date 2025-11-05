@@ -14,13 +14,9 @@ data "aws_lb" "load_balancer" {
 resource "aws_route53_record" "record" {
   zone_id = data.aws_route53_zone.zone.zone_id
   name    = var.main_name
-  #   type    = "A"
   type = "CNAME"
   ttl  = "3600"
   records = [
-    # "10.0.0.1"
     data.aws_lb.load_balancer.dns_name
   ]
-
-
 }
