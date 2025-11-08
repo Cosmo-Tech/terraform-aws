@@ -2,6 +2,10 @@ output "lan_subnet_ids" {
   value = aws_subnet.lan_subnets[*].id
 }
 
+# output "lan_subnet_id1" {
+#   value = aws_subnet.lan_subnets[1].id
+# }
+
 output "wan_subnet_id" {
   value = aws_subnet.wan_subnet.id
 }

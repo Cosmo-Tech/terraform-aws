@@ -44,6 +44,7 @@ resource "aws_iam_role_policy_attachment" "policies" {
   ]
 }
 
+
 resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
   for_each = toset([
     "AmazonEBSCSIDriverPolicy",
@@ -65,42 +66,53 @@ data "aws_iam_role" "eks_auto_mode" {
 
 
 
-# resource "aws_iam_role" "ebs_csi_driver" {
-#   tags = local.tags
 
-#   name = "cosmotech-${local.main_name}"
+# data "aws_iam_policy_document" "eks_cluster_autoscaler_assume_role_policy" {
+#   statement {
+#     actions = ["sts:AssumeRoleWithWebIdentity"]
+#     effect  = "Allow"
 
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect = "Allow"
-#         Action = [
-#           "sts:AssumeRole",
-#           "sts:TagSession"
-#         ]
-#         Principal = {
-#           Service = [
-#             "eks.amazonaws.com",
-#             "ec2.amazonaws.com"
-#           ]
-#         }
-#       },
-#     ]
-#   })
+#     condition {
+#       test     = "StringEquals"
+#       variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+#       values   = ["system:serviceaccount:kube-system:cluster-autoscaler"]
+#     }
+
+#     principals {
+#       identifiers = [aws_iam_openid_connect_provider.eks.arn]
+#       type        = "Federated"
+#     }
+#   }
 # }
 
-
-# resource "aws_iam_role_policy_attachment" "policies_servicesroles" {
-#   for_each = toset([
-#     "AmazonEBSCSIDriverPolicy",
-#   ])
-
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/${each.value}"
-#   role       = aws_iam_role.ebs_csi_driver.name
-
-#   depends_on = [
-#     aws_iam_role.ebs_csi_driver,
-#   ]
+# resource "aws_iam_role" "eks_cluster_autoscaler" {
+#   assume_role_policy = data.aws_iam_policy_document.eks_cluster_autoscaler_assume_role_policy.json
+#   name               = "eks-cluster-autoscaler"
 # }
+
+resource "aws_iam_policy" "eks_cluster_autoscaler" {
+  name = "eks-cluster-autoscaler"
+
+  policy = jsonencode({
+    Statement = [{
+      Action = [
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeTags",
+                "autoscaling:SetDesiredCapacity",
+                "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "ec2:DescribeLaunchTemplateVersions"
+            ]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+    Version = "2012-10-17"
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cluster_autoscaler_attach" {
+  role       = aws_iam_role.main.name
+  policy_arn = aws_iam_policy.eks_cluster_autoscaler.arn
+}
 

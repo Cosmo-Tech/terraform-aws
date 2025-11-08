@@ -34,7 +34,6 @@
 # - ram : 7 Go
 
 
-
 locals {
   node_name_prefix = "cosmotech-node-${local.main_name}"
 }
@@ -49,7 +48,7 @@ resource "aws_eks_node_group" "node_groups" {
 
   node_group_name = "${local.main_name}-${each.value.tier}"
   node_role_arn   = var.iam_role_main
-  subnet_ids      = var.lan_subnet_ids
+  subnet_ids      = ["${var.lan_subnet_ids[0]}"] # Force nodes to be on only one subnet. This is a quick fix to avoid pods unscheduled due to their persistents storages not on the same region zone that the node.
 
   instance_types = ["${each.value.machine_type}"]
   ami_type       = "AL2023_x86_64_STANDARD"
@@ -77,8 +76,6 @@ resource "aws_eks_node_group" "node_groups" {
   depends_on = [
     var.iam_role_main,
     var.cluster_id,
-    # var.lan_subnet_ids,
-    # var.wan_subnet_id, # Be sure to have internet access
     var.nat_id,
     var.wan_ig_id, # Be sure to have internet access
   ]

@@ -1,3 +1,10 @@
+locals {
+  autoscale_values = {
+    "KUBERNETES_VERSION" = "v${aws_eks_cluster.cluster.version}.0"
+    "CLUSTER_NAME" = local.main_name
+  }
+}
+
 resource "aws_eks_cluster" "cluster" {
   tags = local.tags
 
@@ -45,8 +52,6 @@ resource "aws_eks_cluster" "cluster" {
 
   depends_on = [
     var.iam_role_main,
-    # var.lan_subnet_ids,
-    # var.wan_subnet_id, # Be sure to have internet access
     var.nat_id,
     var.wan_ig_id, # Be sure to have internet access
   ]
@@ -66,6 +71,7 @@ resource "aws_eks_addon" "vpc_cni" {
   ]
 }
 
+
 resource "aws_eks_addon" "kube_proxy" {
   tags = local.tags
 
@@ -78,6 +84,7 @@ resource "aws_eks_addon" "kube_proxy" {
     aws_eks_cluster.cluster,
   ]
 }
+
 
 resource "aws_eks_addon" "coredns" {
   tags = local.tags
@@ -109,28 +116,16 @@ resource "aws_eks_addon" "coredns" {
 }
 
 
-
-# data "aws_availability_zones" "available" {
-#   region = var.cluster_region
-#   state  = "available"
-# }
-
 resource "aws_eks_addon" "ebs_csi_driver" {
   tags = local.tags
 
   cluster_name = aws_eks_cluster.cluster.name
   region       = var.cluster_region
-  # region       = data.aws_availability_zones.available
-
   addon_name = "aws-ebs-csi-driver"
-  # addon_version            = "v1.29.1-eksbuild.1"
-  # service_account_role_arn = var.iam_role_main
-
   configuration_values        = null
   preserve                    = true
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-  # service_account_role_arn    = null
 
   pod_identity_association {
     role_arn        = var.iam_role_main
@@ -143,23 +138,62 @@ resource "aws_eks_addon" "ebs_csi_driver" {
 }
 
 
+# Required for autoscale
+resource "aws_eks_addon" "eks_pod_identity_agent" {
+  tags = local.tags
+
+  cluster_name = aws_eks_cluster.cluster.name
+  region       = var.cluster_region
+  addon_name = "eks-pod-identity-agent"
+  configuration_values        = null
+  preserve                    = true
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  # pod_identity_association {
+  #   role_arn        = var.iam_role_main
+  #   service_account = "ebs-csi-controller-sa"
+  # }
+
+  depends_on = [
+    aws_eks_cluster.cluster,
+  ]
+}
 
 
+# Storage class
 resource "kubernetes_storage_class" "cosmotech-retain" {
   metadata {
     name = "cosmotech-retain"
   }
-  storage_provisioner = "kubernetes.io/aws-ebs"
+  storage_provisioner = "ebs.csi.aws.com"
   reclaim_policy      = "Retain"
+  allow_volume_expansion = true
   volume_binding_mode = "WaitForFirstConsumer"
-  parameters = {
-    "fstype" = "ext4"
-    "type" = "gp3"
-  }
-
 
   depends_on = [
     aws_eks_addon.ebs_csi_driver,
   ]
 }
 
+
+# Autoscale
+data "template_file" "autoscale" {
+  template = templatefile("${path.module}/autoscale.yaml", local.autoscale_values)
+}
+
+resource "null_resource" "autoscale" {
+  triggers = {
+    manifest_sha1 = "${sha1("${data.template_file.autoscale.rendered}")}"
+  }
+  provisioner "local-exec" {
+    command = "kubectl apply -f -<<EOF\n${data.template_file.autoscale.rendered}\nEOF"
+  }
+}
+
+resource "aws_eks_pod_identity_association" "autoscale" {
+  cluster_name    = aws_eks_cluster.cluster.name
+  namespace       = "kube-system"
+  service_account = "cluster-autoscaler"
+  role_arn        = var.iam_role_main
+}

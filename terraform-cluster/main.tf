@@ -103,6 +103,7 @@ module "nodes" {
 
   iam_role_main  = module.iam.role_main.arn
   lan_subnet_ids = module.network.lan_subnet_ids
+  # lan_subnet_ids = module.network.lan_subnet_id1
   # wan_subnet_id  = module.network.wan_subnet_id
   nat_id    = module.network.nat_id
   wan_ig_id = module.network.wan_ig_id
@@ -125,8 +126,8 @@ module "nodes" {
     }
     db = {
       tier         = "db"
-      machine_type = "t3a.micro"
-      # machine_type = "t3a.large"
+      # machine_type = "t3a.micro"
+      machine_type = "t3a.large"
       min = 1
       max = 4
     }

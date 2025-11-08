@@ -178,7 +178,7 @@ else
                     echo "deleting vpc              $resource_id"
                     aws ec2 delete-vpc --vpc-id $resource_id > /dev/null
 
-                    wait_resource_destruction $resource
+                    # wait_resource_destruction $resource
                 fi
 
                 # if [ "$(echo $resource_type)" = "launch-template" ]; then
@@ -188,12 +188,12 @@ else
                 #     wait_resource_destruction $resource
                 # fi
 
-                if [ "$(echo $resource_type)" = "resource-groups" ]; then
-                    echo "deleting resource group   $resource_id"
-                    aws resource-groups delete-group --group-name $rg_name > /dev/null
+                # if [ "$(echo $resource_type)" = "resource-groups" ]; then
+                #     echo "deleting resource group   $resource_id"
+                #     aws resource-groups delete-group --group-name $rg_name > /dev/null
  
-                    wait_resource_destruction $resource
-                fi
+                #     wait_resource_destruction $resource
+                # fi
 
 
 

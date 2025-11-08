@@ -9,12 +9,10 @@ terraform {
       version = "~> 2.38.0"
     }
   }
-
   backend "s3" {}
 }
 
 provider "aws" {}
-
 
 provider "kubernetes" {
   config_path    = "~/.kube/config"
