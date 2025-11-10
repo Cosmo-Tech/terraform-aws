@@ -1,7 +1,9 @@
 
 resource "aws_resourcegroups_group" "rg" {
-  name = local.main_name
   tags = local.tags
+
+  name   = local.main_name
+  region = var.cluster_region
 
   resource_query {
     query = <<JSON

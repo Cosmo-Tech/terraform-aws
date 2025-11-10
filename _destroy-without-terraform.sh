@@ -37,11 +37,11 @@ gt_rg_resources() {
     # Set order of destruction
     cat $file_tmp | grep nodegroup >> $file_tmp_order
     cat $file_tmp | grep addon >> $file_tmp_order
+    cat $file_tmp | grep cluster >> $file_tmp_order
     cat $file_tmp | grep elastic-ip >> $file_tmp_order
     cat $file_tmp | grep route-table >> $file_tmp_order
     cat $file_tmp | grep natgateway >> $file_tmp_order
     cat $file_tmp | grep internet-gateway >> $file_tmp_order
-    cat $file_tmp | grep cluster >> $file_tmp_order
     cat $file_tmp | grep subnet >> $file_tmp_order
     cat $file_tmp | grep vpc >> $file_tmp_order
     cat $file_tmp | grep resource-groups >> $file_tmp_order
@@ -178,7 +178,7 @@ else
                     echo "deleting vpc              $resource_id"
                     aws ec2 delete-vpc --vpc-id $resource_id > /dev/null
 
-                    wait_resource_destruction $resource
+                    # wait_resource_destruction $resource
                 fi
 
                 # if [ "$(echo $resource_type)" = "launch-template" ]; then
@@ -188,12 +188,12 @@ else
                 #     wait_resource_destruction $resource
                 # fi
 
-                if [ "$(echo $resource_type)" = "resource-groups" ]; then
-                    echo "deleting resource group   $resource_id"
-                    aws resource-groups delete-group --group-name $rg_name > /dev/null
+                # if [ "$(echo $resource_type)" = "resource-groups" ]; then
+                #     echo "deleting resource group   $resource_id"
+                #     aws resource-groups delete-group --group-name $rg_name > /dev/null
  
-                    wait_resource_destruction $resource
-                fi
+                #     wait_resource_destruction $resource
+                # fi
 
 
 

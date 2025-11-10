@@ -1,14 +1,18 @@
-variable "subnet_ids" {
-  type = list(any)
+variable "lan_subnet_ids" {
+  type = list(string)
 }
 
-# variable "nat_gateway_id1" {
+# variable "wan_subnet_id" {
 #   type = string
 # }
 
-# variable "nat_gateway_id2" {
-#   type = string
-# }
+variable "wan_ig_id" {
+  type = string
+}
+
+variable "nat_id" {
+  type = string
+}
 
 variable "iam_role_main" {
   type = string
@@ -19,11 +23,10 @@ variable "cluster_id" {
 }
 
 variable "node_groups" {
-  description = "Map of node pool definitions"
   type = map(object({
+    tier         = string
     machine_type = string
     min          = number
     max          = number
-    tier         = string
   }))
 }

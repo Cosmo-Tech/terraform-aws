@@ -6,7 +6,7 @@
 
 
 # Stop script if missing dependency
-required_commands="terraform aws jq"
+required_commands="terraform aws jq kubectl"
 for command in $required_commands; do
 	if [ -z "$(command -v $command)" ]; then
 		echo "error: required command not found: \e[91m$command\e[97m"
@@ -47,16 +47,29 @@ if [ -z "$(aws s3 ls --bucket-name $state_storage_name)" ]; then
     exit
 else
     echo "getting state storage region..."
-    state_storage_region="$(aws --output json s3api head-bucket --bucket $state_storage_name | jq -r '.BucketRegion')"
+    state_storage_region="$(aws --output json s3api get-bucket-location --bucket $state_storage_name | jq -r '.LocationConstraint')"
+    if [ "$(echo $state_storage_region)" != "" ]; then
+        echo "found $state_storage_name in $state_storage_region"
+    else
+        echo "error: $state_storage_name not found in $state_storage_region"
+        exit
+    fi
 fi
 
 # Clear old data
 rm -rf terraform-cluster/.terraform*
 
 # Deploy
-terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="key=tfstate-eks-$cluster_stage-$cluster_name" -backend-config="region=$state_storage_region"
+terraform -chdir=terraform-cluster init -upgrade -backend-config="bucket=$state_storage_name" -backend-config="region=$state_storage_region" -backend-config="key=tfstate-eks-$cluster_stage-$cluster_name"
 terraform -chdir=terraform-cluster plan -out .terraform.plan
-terraform -chdir=terraform-cluster apply .terraform.plan
 
+# echo ""
+# while read -p "Apply? [write 'yes please' to confirm] (CTRL+C to exit): " apply_confirmation
+# do
+#     if [ "$(echo $apply_confirmation)" = "yes please" ]; then
+        terraform -chdir=terraform-cluster apply .terraform.plan
+#         break
+#     fi
+# done
 
 exit

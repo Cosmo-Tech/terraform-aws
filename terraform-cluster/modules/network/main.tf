@@ -22,6 +22,7 @@ resource "aws_vpc" "vpc" {
     },
   )
 
+  region               = var.cluster_region
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
   enable_dns_support   = true
@@ -38,6 +39,7 @@ resource "aws_subnet" "wan_subnet" {
     },
   )
 
+  region                  = var.cluster_region
   availability_zone       = data.aws_availability_zones.available.names[0]
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 100)
@@ -56,6 +58,7 @@ resource "aws_internet_gateway" "wan_ig" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   depends_on = [
@@ -71,6 +74,7 @@ resource "aws_route_table" "wan_rt" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   route {
@@ -85,9 +89,10 @@ resource "aws_route_table" "wan_rt" {
 }
 
 resource "aws_route_table_association" "wan_rt" {
+  region = var.cluster_region
+
   subnet_id      = aws_subnet.wan_subnet.id
   route_table_id = aws_route_table.wan_rt.id
-  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.wan_subnet,
@@ -99,6 +104,15 @@ resource "aws_route_table_association" "wan_rt" {
 
 # -- NAT --
 resource "aws_eip" "nat_ip" {
+  tags = merge(
+    local.tags,
+    {
+      Name = "${local.main_name}-nat-ip",
+    },
+  )
+
+  region = var.cluster_region
+
   domain = "vpc"
 }
 
@@ -110,11 +124,16 @@ resource "aws_nat_gateway" "nat" {
     },
   )
 
-  subnet_id = aws_subnet.wan_subnet.id
-  # connectivity_type = "private"
+  region = var.cluster_region
+
+  subnet_id         = aws_subnet.wan_subnet.id
   connectivity_type = "public"
   allocation_id     = aws_eip.nat_ip.id
 
+  depends_on = [
+    aws_eip.nat_ip,
+    aws_internet_gateway.wan_ig,
+  ]
 }
 # -- NAT --
 
@@ -130,8 +149,9 @@ resource "aws_subnet" "lan_subnets" {
 
   count = 2
 
-  vpc_id                  = aws_vpc.vpc.id
+  region                  = var.cluster_region
   availability_zone       = data.aws_availability_zones.available.names[count.index]
+  vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index + 1)
   map_public_ip_on_launch = true
 }
@@ -144,6 +164,7 @@ resource "aws_route_table" "lan_rt" {
     },
   )
 
+  region = var.cluster_region
   vpc_id = aws_vpc.vpc.id
 
   route {
@@ -162,9 +183,9 @@ resource "aws_route_table_association" "lan_rt" {
 
   count = 2
 
+  region         = var.cluster_region
   subnet_id      = aws_subnet.lan_subnets[count.index].id
   route_table_id = aws_route_table.lan_rt.id
-  region         = var.cluster_region
 
   depends_on = [
     aws_subnet.lan_subnets,
@@ -173,120 +194,32 @@ resource "aws_route_table_association" "lan_rt" {
 }
 
 
-# data "aws_route_table" "rt" {
-#   subnet_id = aws_subnet.subnet[0].id
-
-#   depends_on = [
-#     aws_subnet.subnet[0],
-#   ]
-# }
 
 
-# resource "aws_route_table" "rt" {
+
+
+
+# resource "aws_lb" "load_balancer" {
 #   tags = local.tags
 
-#   vpc_id = aws_vpc.vpc.id
+#   name               = local.main_name
+#   internal           = false
+#   load_balancer_type = "application"
 
-#   # route {
-#   #   cidr_block = "0.0.0.0/0"
-#   #   gateway_id = aws_nat_gateway.nat[count.index].id
-#   #   # gateway_id = aws_internet_gateway.ig.id
-#   # }
+#   # subnets            = [
+#   #   for subnet in aws_subnet.wan_subnet : subnet.id
+#   #   ]
 
-#   depends_on = [
-#     aws_vpc.vpc,
-#   ]
+#   # enable_deletion_protection = true
+
+#   subnet_mapping {
+#     subnet_id = aws_subnet.lan_subnets[0].id
+#   }
+
+#   subnet_mapping {
+#     subnet_id = aws_subnet.lan_subnets[1].id
+#   }
 # }
 
 
-# resource "aws_route" "route" {
-#   count = 2
-
-#   route_table_id         = aws_route_table.rt.id
-#   destination_cidr_block = "0.0.0.0/0"
-#   gateway_id             = aws_nat_gateway.nat[count.index].id
-
-#   depends_on = [
-#     aws_nat_gateway.nat,
-#     aws_route_table.rt,
-#   ]
-# }
-
-
-# resource "aws_route" "route" {
-#   route_table_id            = aws_route_table.rt.id
-#   # route_table_id            = data.aws_route_table.rt.id
-#   destination_cidr_block    = "0.0.0.0/0"
-#   gateway_id = aws_internet_gateway.ig.id
-
-#   depends_on = [
-#     aws_route_table.rt,
-#     # data.aws_route_table.rt,
-#   ]
-# }
-
-# resource "aws_main_route_table_association" "rt_vpc" {
-#   # tags = local.tags
-
-#   region = var.cluster_region
-
-#   # route_table_id = data.aws_route_table.rt.id
-#   route_table_id = aws_route_table.rt.id
-#   vpc_id = aws_vpc.vpc.id
-
-#   depends_on = [
-#     # data.aws_route_table.rt,
-#     aws_route_table.rt,
-#     aws_vpc.vpc,
-#   ]
-# }
-
-# resource "aws_route_table_association" "rt_igw" {
-#   # tags = local.tags
-
-#   region = var.cluster_region
-
-#   route_table_id = aws_route_table.rt.id
-#   gateway_id     = aws_internet_gateway.ig.id
-
-#   depends_on = [
-#     # data.aws_route_table.rt,
-#     aws_route_table.rt,
-#     aws_internet_gateway.ig,
-#   ]
-# }
-
-
-
-# resource "aws_route_table_association" "rt_subnet1" {
-#   # tags = local.tags
-
-#   region = var.cluster_region
-
-#   # route_table_id = data.aws_route_table.rt.id
-#   route_table_id = aws_route_table.rt.id
-#   subnet_id = aws_subnet.subnet[0].id
-
-#   depends_on = [
-#     # data.aws_route_table.rt,
-#     aws_route_table.rt,
-#     aws_subnet.subnet,
-#   ]
-# }
-
-# resource "aws_route_table_association" "rt_subnet2" {
-#   # tags = local.tags
-
-#   region = var.cluster_region
-
-#   # route_table_id = data.aws_route_table.rt.id
-#   route_table_id = aws_route_table.rt.id
-#   subnet_id = aws_subnet.subnet[1].id
-
-#   depends_on = [
-#     # data.aws_route_table.rt,
-#     aws_route_table.rt,
-#     aws_subnet.subnet,
-#   ]
-# }
 

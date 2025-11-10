@@ -2,15 +2,19 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.0"
+      version = "~> 6.17.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.38.0"
     }
   }
-
   backend "s3" {}
 }
 
-provider "aws" {
-  # region = "eu-west-3"
-}
+provider "aws" {}
 
-# data "aws_region" "current" {}
+provider "kubernetes" {
+  config_path    = "~/.kube/config"
+  config_context = local.main_name
+}
