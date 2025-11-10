@@ -3,12 +3,12 @@ data "aws_route53_zone" "zone" {
 }
 
 
-# Load balancer is created from NGinx ingress Helm Chart
-data "aws_lb" "load_balancer" {
-  tags = {
-    "eks:eks-cluster-name" = var.main_name
-  }
-}
+# # Load balancer is created from NGinx ingress Helm Chart
+# data "aws_lb" "load_balancer" {
+#   tags = {
+#     "eks:eks-cluster-name" = var.main_name
+#   }
+# }
 
 
 resource "aws_route53_record" "record" {
@@ -17,6 +17,7 @@ resource "aws_route53_record" "record" {
   type    = "CNAME"
   ttl     = "3600"
   records = [
-    data.aws_lb.load_balancer.dns_name
+    # data.aws_lb.load_balancer.dns_name
+    "${var.main_name}.${data.aws_route53_zone.zone.name}"
   ]
 }

@@ -47,8 +47,8 @@ resource "aws_eks_node_group" "node_groups" {
   tags = merge(
     local.tags,
     {
-      "k8s.io/cluster-autoscaler/enabled"             = "true"
-      "k8s.io/cluster-autoscaler/${local.main_name}"  = "owned"
+      "k8s.io/cluster-autoscaler/enabled"            = "true"
+      "k8s.io/cluster-autoscaler/${local.main_name}" = "owned"
       # "cosmotech.com/tier"                            = "${each.value.tier}"
     },
   )

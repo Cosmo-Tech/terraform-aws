@@ -9,6 +9,7 @@
     * [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
     * [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
     * [jq](https://jqlang.org/)
+    * [kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/)
 
 ## How to
 * configure aws cli
