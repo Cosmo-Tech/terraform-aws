@@ -96,14 +96,19 @@ resource "aws_iam_policy" "eks_cluster_autoscaler" {
   policy = jsonencode({
     Statement = [{
       Action = [
-                "autoscaling:DescribeAutoScalingGroups",
-                "autoscaling:DescribeAutoScalingInstances",
-                "autoscaling:DescribeLaunchConfigurations",
-                "autoscaling:DescribeTags",
-                "autoscaling:SetDesiredCapacity",
-                "autoscaling:TerminateInstanceInAutoScalingGroup",
-                "ec2:DescribeLaunchTemplateVersions"
-            ]
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:DescribeTags",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "ec2:DescribeLaunchTemplateVersions",
+        "autoscaling:DescribeScalingActivities",
+        "eks:DescribeNodegroup",
+        "ec2:DescribeImages",
+        "ec2:DescribeInstanceTypes",
+        "ec2:GetInstanceTypesFromInstanceRequirements"
+      ]
       Effect   = "Allow"
       Resource = "*"
     }]
@@ -116,3 +121,59 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_autoscaler_attach" {
   policy_arn = aws_iam_policy.eks_cluster_autoscaler.arn
 }
 
+
+
+
+
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Action": [
+#         "autoscaling:DescribeAutoScalingGroups",
+#         "autoscaling:DescribeAutoScalingInstances",
+#         "autoscaling:DescribeLaunchConfigurations",
+#         "autoscaling:DescribeScalingActivities",
+#         "autoscaling:SetDesiredCapacity",
+#         "autoscaling:TerminateInstanceInAutoScalingGroup",
+#         "eks:DescribeNodegroup"
+#       ],
+#       "Resource": ["arn:aws:autoscaling:${YOUR_CLUSTER_AWS_REGION}:${YOUR_AWS_ACCOUNT_ID}:autoScalingGroup:*:autoScalingGroupName/${YOUR_ASG_NAME}"]
+#     }
+#   ]
+# }
+
+
+
+
+
+
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Action": [
+#         "autoscaling:DescribeAutoScalingGroups",
+#         "autoscaling:DescribeAutoScalingInstances",
+#         "autoscaling:DescribeLaunchConfigurations",
+#         "autoscaling:DescribeScalingActivities",
+#         "ec2:DescribeImages",
+#         "ec2:DescribeInstanceTypes",
+#         "ec2:DescribeLaunchTemplateVersions",
+#         "ec2:GetInstanceTypesFromInstanceRequirements",
+#         "eks:DescribeNodegroup"
+#       ],
+#       "Resource": ["*"]
+#     },
+#     {
+#       "Effect": "Allow",
+#       "Action": [
+#         "autoscaling:SetDesiredCapacity",
+#         "autoscaling:TerminateInstanceInAutoScalingGroup"
+#       ],
+#       "Resource": ["*"]
+#     }
+#   ]
+# }

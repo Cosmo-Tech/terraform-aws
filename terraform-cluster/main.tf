@@ -108,11 +108,16 @@ module "nodes" {
   nat_id    = module.network.nat_id
   wan_ig_id = module.network.wan_ig_id
 
+
+
+  # Machine types below are setted from:
+  #  - Burstable = false (otherwise, autoscaler isn't working)
+  #  - Zone availability (There are 2 kinds of AWS instances type: NN.size (=Intel) & NNa.size (=AMD). Most of AMD types are not available accross all the world while Intel type are available almost everywhere)
   node_groups = {
     monitoring = {
       tier = "monitoring"
       # machine_type = "t3a.micro"
-      machine_type = "t3.small"
+      machine_type = "m5.large"
       min          = 1
       # min          = 0
       max = 2
@@ -120,35 +125,35 @@ module "nodes" {
     services = {
       tier = "services"
       # machine_type = "t3a.micro"
-      machine_type = "t3a.xlarge"
+      machine_type = "m5.xlarge"
       min          = 1
       max          = 3
     }
     db = {
-      tier         = "db"
+      tier = "db"
       # machine_type = "t3a.micro"
-      machine_type = "t3a.large"
-      min = 1
-      max = 4
+      machine_type = "m5.xlarge"
+      min          = 1
+      max          = 4
     }
     basic = {
       tier         = "basic"
-      machine_type = "t3a.micro"
-      # machine_type = "c5d.xlarge"
+      # machine_type = "t3a.micro"
+      machine_type = "m5.xlarge"
       min = 1
       max = 4
+    }
+    highmemory = {
+      tier         = "highmemory"
+      machine_type = "t3a.micro"
+      # machine_type = "r5.4xlarge"
+      min = 0
+      max = 3
     }
     highcpu = {
       tier         = "highcpu"
       machine_type = "t3a.micro"
       # machine_type = "c5d.18xlarge"
-      min = 0
-      max = 3
-    }
-    highmemory = {
-      tier         = "highmemory"
-      machine_type = "t3a.micro"
-      # machine_type = "r5ad.4xlarge"
       min = 0
       max = 3
     }
@@ -167,7 +172,7 @@ module "dns" {
 
   # domain_name = var.alternative_domain_name ? var.alternative_domain_name : "${var.cluster_name}.aws.platform.cosmotech.com"
 
-  main_name = local.main_name
-  domain_name = local.domain_name
+  main_name               = local.main_name
+  domain_name             = local.domain_name
   alternative_domain_name = ""
 }

@@ -1,7 +1,7 @@
 locals {
   autoscale_values = {
-    "KUBERNETES_VERSION" = "v${aws_eks_cluster.cluster.version}.0"
-    "CLUSTER_NAME" = local.main_name
+    "KUBERNETES_VERSION" = "v${aws_eks_cluster.cluster.version}.2"
+    "CLUSTER_NAME"       = local.main_name
   }
 }
 
@@ -119,9 +119,9 @@ resource "aws_eks_addon" "coredns" {
 resource "aws_eks_addon" "ebs_csi_driver" {
   tags = local.tags
 
-  cluster_name = aws_eks_cluster.cluster.name
-  region       = var.cluster_region
-  addon_name = "aws-ebs-csi-driver"
+  cluster_name                = aws_eks_cluster.cluster.name
+  region                      = var.cluster_region
+  addon_name                  = "aws-ebs-csi-driver"
   configuration_values        = null
   preserve                    = true
   resolve_conflicts_on_create = "OVERWRITE"
@@ -142,9 +142,9 @@ resource "aws_eks_addon" "ebs_csi_driver" {
 resource "aws_eks_addon" "eks_pod_identity_agent" {
   tags = local.tags
 
-  cluster_name = aws_eks_cluster.cluster.name
-  region       = var.cluster_region
-  addon_name = "eks-pod-identity-agent"
+  cluster_name                = aws_eks_cluster.cluster.name
+  region                      = var.cluster_region
+  addon_name                  = "eks-pod-identity-agent"
   configuration_values        = null
   preserve                    = true
   resolve_conflicts_on_create = "OVERWRITE"
@@ -166,10 +166,10 @@ resource "kubernetes_storage_class" "cosmotech-retain" {
   metadata {
     name = "cosmotech-retain"
   }
-  storage_provisioner = "ebs.csi.aws.com"
-  reclaim_policy      = "Retain"
+  storage_provisioner    = "ebs.csi.aws.com"
+  reclaim_policy         = "Retain"
   allow_volume_expansion = true
-  volume_binding_mode = "WaitForFirstConsumer"
+  volume_binding_mode    = "WaitForFirstConsumer"
 
   depends_on = [
     aws_eks_addon.ebs_csi_driver,

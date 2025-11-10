@@ -1,27 +1,27 @@
-# db
-# - Node size: Standard_D4ads_v5 -> t3a.large (! AWS downgraded in comparison of Azure !)
-# - cpu : 4         -> 4
-# - ram : 16 Go     -> 8 Go
-
 # monitoring
-# - Node size: Standard_D2ads_v5 -> t3.small (! AWS downgraded in comparison of Azure !)
-# - cpu : 2         -> 2
-# - ram : 8 Go      -> 2 Go
-
-# highmemory
-# - Node size: Standard_E16ads_v5 -> r5ad.4xlarge
-# - cpu : 16
-# - ram : 128 Go
-
-# basic
-# - Node size: Standard_F4s_v2 -> c5d.xlarge
-# - cpu : 4
+# - Node size: Standard_D2ads_v5 -> m5.large
+# - cpu : 2
 # - ram : 8 Go
 
 # services
-# - Node size: Standard_B4ms -> t3a.xlarge
+# - Node size: Standard_B4ms -> m5.xlarge
 # - cpu : 4
 # - ram : 16 Go
+
+# db
+# - Node size: Standard_D4ads_v5 -> m5.xlarge
+# - cpu : 4
+# - ram : 16 Go
+
+# basic
+# - Node size: Standard_F4s_v2 -> m5.xlarge
+# - cpu : 4                    -> 4
+# - ram : 8 Go                 -> 16
+
+# highmemory
+# - Node size: Standard_E16ads_v5 -> r5.4xlarge
+# - cpu : 16
+# - ram : 128 Go
 
 # highcpu
 # - Node size: Standard_F72s_v2 -> c5d.18xlarge
@@ -41,7 +41,19 @@ locals {
 resource "aws_eks_node_group" "node_groups" {
   for_each = var.node_groups
 
-  tags = local.tags
+  # tags = local.tags
+
+
+  tags = merge(
+    local.tags,
+    {
+      "k8s.io/cluster-autoscaler/enabled"             = "true"
+      "k8s.io/cluster-autoscaler/${local.main_name}"  = "owned"
+      # "cosmotech.com/tier"                            = "${each.value.tier}"
+    },
+  )
+
+
 
   cluster_name = local.main_name
   region       = var.cluster_region
