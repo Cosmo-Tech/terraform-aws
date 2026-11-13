@@ -137,11 +137,11 @@ module "nodes" {
       max          = 4
     }
     basic = {
-      tier         = "basic"
+      tier = "basic"
       # machine_type = "t3a.micro"
       machine_type = "m5.xlarge"
-      min = 1
-      max = 4
+      min          = 1
+      max          = 4
     }
     highmemory = {
       tier         = "highmemory"
