@@ -184,7 +184,7 @@ data "template_file" "autoscale" {
 
 resource "null_resource" "autoscale" {
   triggers = {
-    manifest_sha1 = "${sha1("${data.template_file.autoscale.rendered}")}"
+    manifest_sha1 = sha1(data.template_file.autoscale.rendered)
   }
   provisioner "local-exec" {
     command = "kubectl apply -f -<<EOF\n${data.template_file.autoscale.rendered}\nEOF"

@@ -47,8 +47,8 @@ resource "aws_eks_node_group" "node_groups" {
   tags = merge(
     local.tags,
     {
-      "k8s.io/cluster-autoscaler/enabled"             = "true"
-      "k8s.io/cluster-autoscaler/${local.main_name}"  = "owned"
+      "k8s.io/cluster-autoscaler/enabled"            = "true"
+      "k8s.io/cluster-autoscaler/${local.main_name}" = "owned"
       # "cosmotech.com/tier"                            = "${each.value.tier}"
     },
   )
@@ -60,13 +60,13 @@ resource "aws_eks_node_group" "node_groups" {
 
   node_group_name = "${local.main_name}-${each.value.tier}"
   node_role_arn   = var.iam_role_main
-  subnet_ids      = ["${var.lan_subnet_ids[0]}"] # Force nodes to be on only one subnet. This is a quick fix to avoid pods unscheduled due to their persistents storages not on the same region zone that the node.
+  subnet_ids      = [var.lan_subnet_ids[0]] # Force nodes to be on only one subnet. This is a quick fix to avoid pods unscheduled due to their persistents storages not on the same region zone that the node.
 
-  instance_types = ["${each.value.machine_type}"]
+  instance_types = [each.value.machine_type]
   ami_type       = "AL2023_x86_64_STANDARD"
 
   labels = {
-    "cosmotech.com/tier" = "${each.value.tier}"
+    "cosmotech.com/tier" = each.value.tier
   }
 
   taint {
